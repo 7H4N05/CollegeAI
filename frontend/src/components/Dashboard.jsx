@@ -13,11 +13,13 @@ import {
   Clock,
   Sparkles,
   ChevronRight,
-  BookOpen
+  BookOpen,
+  Calculator,
+  CheckCircle2
 } from 'lucide-react';
 import { api } from '../services/api';
 
-function ProgressRing({ percentage, size = 56, strokeWidth = 5, color = '#10b981' }) {
+function ProgressRing({ percentage, size = 52, strokeWidth = 4.5, color = '#10b981' }) {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const offset = circumference - (percentage / 100) * circumference;
@@ -61,6 +63,9 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
   const [fees, setFees] = useState(null);
   const [announcements, setAnnouncements] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Quick interactive leave slider state
+  const [simulatedLeaves, setSimulatedLeaves] = useState(0);
 
   useEffect(() => {
     async function loadDashboardData() {
@@ -111,17 +116,35 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
   const upcomingExam = exams?.exams[0];
   const isCriticalAttendance = overallAtt < 75;
 
+  // Calculate simulated attendance
+  let totalAttended = 0;
+  let totalConducted = 0;
+  attendance.records.forEach(r => {
+    totalAttended += r.attended;
+    totalConducted += r.conducted;
+  });
+
+  const projectedConducted = totalConducted + (simulatedLeaves * 3);
+  const projectedPct = projectedConducted > 0 
+    ? Number(((totalAttended / projectedConducted) * 100).toFixed(1))
+    : overallAtt;
+
   return (
     <div className="flex flex-col gap-6 animate-fade-in w-full">
       
       {/* GREETING HEADER */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-card p-6 border-l-4 border-l-indigo-600">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Good morning, {currentUser.name.split(' ')[0]} 👋
-          </h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Good morning, {currentUser.name.split(' ')[0]} 👋
+            </h2>
+            <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-mono text-[10px] font-bold border border-indigo-500/20">
+              Sem {profile.semester} • {profile.course}
+            </span>
+          </div>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">
-            {isParent ? `Monitoring academic records for ${profile.name}` : `Here's your academic overview for today.`}
+            {isParent ? `Monitoring academic records for ${profile.name}` : `Here is your real-time academic status & intelligence solver.`}
           </p>
         </div>
 
@@ -164,7 +187,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
           className="glass-card p-5 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Attendance</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-display">Attendance</span>
             <span className={`status-pill ${overallAtt >= 75 ? 'safe' : 'critical'}`}>
               {overallAtt >= 75 ? 'Safe' : 'Critical'}
             </span>
@@ -189,7 +212,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
           className="glass-card p-5 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">CGPA Score</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-display">CGPA Score</span>
             <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400">
               <Award className="h-3.5 w-3.5" />
             </div>
@@ -211,7 +234,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
           className="glass-card p-5 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pending Dues</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-display">Pending Dues</span>
             <div className={`p-1.5 rounded-lg ${fees.pending > 0 ? 'bg-amber-500/10 text-amber-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
               <CreditCard className="h-3.5 w-3.5" />
             </div>
@@ -233,7 +256,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
           className="glass-card p-5 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Assignments</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-display">Assignments</span>
             <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
               <CheckSquare className="h-3.5 w-3.5" />
             </div>
@@ -255,7 +278,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
           className="glass-card p-5 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all col-span-2 lg:col-span-1"
         >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Next Exam</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-display">Next Exam</span>
             <div className="p-1.5 rounded-lg bg-teal-500/10 text-teal-600 dark:text-teal-400">
               <Calendar className="h-3.5 w-3.5" />
             </div>
@@ -279,13 +302,51 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
         {/* Left Column (8 cols): Attendance Insights & Performance */}
         <div className="lg:col-span-8 flex flex-col gap-6">
           
+          {/* Interactive Leave Simulator Widget */}
+          <div className="glass-card p-6 flex flex-col gap-4 border border-indigo-500/20">
+            <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
+              <div className="flex items-center gap-2">
+                <Calculator className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">
+                  Quick Leave Attendance Simulator
+                </h3>
+              </div>
+              <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                {simulatedLeaves} Days Leave
+              </span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex flex-col gap-1 w-full sm:w-2/3">
+                <label className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+                  Simulate taking leave days next week:
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="10"
+                  value={simulatedLeaves}
+                  onChange={(e) => setSimulatedLeaves(Number(e.target.value))}
+                  className="w-full accent-indigo-600 cursor-pointer"
+                />
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/60 dark:border-slate-800/60 flex items-center justify-between gap-4 w-full sm:w-1/3">
+                <span className="text-xs text-slate-400 font-medium">Projected %:</span>
+                <span className={`font-display font-extrabold text-lg ${projectedPct >= 75 ? 'text-emerald-500' : 'text-red-500'}`}>
+                  {projectedPct}%
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* Attendance Insights Panel */}
           <div className="glass-card p-6 flex flex-col gap-5">
             <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
               <div className="flex items-center gap-2">
                 <Percent className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                 <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">
-                  Attendance Insights & Leave Solver
+                  Course Subject Breakdown
                 </h3>
               </div>
               <button 
@@ -297,9 +358,9 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
             </div>
 
             {/* Subject Breakdown List */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {attendance.records.map((rec) => (
-                <div key={rec.subject_code} className="p-3.5 rounded-xl bg-slate-100/60 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 flex items-center justify-between">
+                <div key={rec.subject_code} className="p-4 rounded-xl bg-slate-100/60 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 flex items-center justify-between">
                   <div className="flex flex-col">
                     <span className="text-xs font-bold text-slate-900 dark:text-white">{rec.subject_name}</span>
                     <span className="text-[10px] text-slate-400 font-medium">{rec.attended} / {rec.conducted} classes conducted</span>
@@ -329,16 +390,16 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {marks.subjects.map((sub) => (
-                <div key={sub.code} className="p-3.5 rounded-xl bg-slate-100/60 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 flex flex-col gap-1.5">
+                <div key={sub.code} className="p-4 rounded-xl bg-slate-100/60 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 flex flex-col gap-2">
                   <div className="flex justify-between items-start">
                     <span className="text-xs font-bold text-slate-900 dark:text-white">{sub.name}</span>
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400">
                       Mid-Sem: {sub.mid_sem}/30
                     </span>
                   </div>
-                  <div className="flex justify-between text-[10px] text-slate-400 font-medium">
+                  <div className="flex justify-between text-[10px] text-slate-400 font-medium pt-1 border-t border-slate-200/40 dark:border-slate-800/40">
                     <span>Assignments: {sub.assignment_marks}/20</span>
                     <span>Total Internal: {sub.internal_total}/50</span>
                   </div>
@@ -389,7 +450,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
 
             <div className="flex flex-col gap-2.5">
               {pendingAssignmentsList.slice(0, 3).map((asn) => (
-                <div key={asn.id} className="p-2.5 rounded-xl bg-amber-500/5 border border-amber-500/20 flex flex-col gap-1">
+                <div key={asn.id} className="p-3 rounded-xl bg-amber-500/5 border border-amber-500/20 flex flex-col gap-1">
                   <span className="text-xs font-bold text-slate-900 dark:text-white">{asn.title}</span>
                   <div className="flex justify-between text-[10px] text-slate-400 font-medium">
                     <span>{asn.subject_name}</span>

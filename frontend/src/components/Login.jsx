@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Users, Shield, AlertCircle, ArrowRight, Lock, Sparkles } from 'lucide-react';
+import { User, Users, Shield, AlertCircle, ArrowRight, Lock, Sparkles, CheckCircle2 } from 'lucide-react';
 import { api } from '../services/api';
 
 export default function Login({ onLoginSuccess }) {
@@ -66,9 +66,9 @@ export default function Login({ onLoginSuccess }) {
     <div className="min-h-[75vh] flex flex-col justify-center items-center my-auto py-8 max-w-md w-full mx-auto animate-fade-in gap-6 text-center">
       
       <div className="flex flex-col items-center justify-center gap-2">
-        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-display font-bold text-xs border border-indigo-500/20">
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-display font-bold text-xs border border-indigo-500/20 shadow-sm">
           <Sparkles className="h-3.5 w-3.5" />
-          <span>Role-Based Identity Portal</span>
+          <span>Role-Based Authorization Portal</span>
         </div>
         <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 dark:text-white">Sign In to CollegeAI</h2>
         <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
@@ -126,16 +126,19 @@ export default function Login({ onLoginSuccess }) {
         )}
 
         {role !== 'ADMIN' && (
-          <div className="flex flex-col gap-1.5 p-3 rounded-xl bg-indigo-500/5 border border-indigo-500/15">
-            <label className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
-              Quick Persona Autofill (Hackathon Helper)
-            </label>
+          <div className="flex flex-col gap-1.5 p-3.5 rounded-xl bg-indigo-500/5 border border-indigo-500/15">
+            <div className="flex items-center justify-between">
+              <label className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
+                Quick Persona Autofill (Hackathon Mode)
+              </label>
+              <CheckCircle2 className="h-3.5 w-3.5 text-indigo-500" />
+            </div>
             <select
               value={studentId}
               onChange={(e) => handleQuickFill(e.target.value)}
               className="glass-input text-xs font-medium text-slate-800 dark:text-slate-200 bg-white/80 dark:bg-slate-900/80"
             >
-              <option value="">-- Choose a test persona --</option>
+              <option value="">-- Select a test persona --</option>
               <option value="STU001">Aarav Sharma (88% Attendance - High GPA)</option>
               <option value="STU002">Sneha Patel (76% Attendance - Borderline)</option>
               <option value="STU003">Rohan Das (68% Attendance - Low, Pending Fees)</option>

@@ -20,7 +20,9 @@ import {
   Menu, 
   ChevronRight, 
   Sparkles,
-  Users
+  Users,
+  CheckCircle2,
+  Activity
 } from 'lucide-react';
 import { api } from '../services/api';
 
@@ -79,17 +81,16 @@ export default function Layout({
     }
   };
 
-  // Nav Items Configuration
   const studentNavItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'attendance', label: 'Attendance', icon: Percent },
-    { id: 'academics', label: 'Academics', icon: Award },
-    { id: 'assignments', label: 'Assignments', icon: CheckSquare },
-    { id: 'exams', label: 'Exams', icon: Calendar },
-    { id: 'fees', label: 'Fees & Dues', icon: CreditCard },
-    { id: 'notices', label: 'Notices', icon: Bell },
+    { id: 'attendance', label: 'Attendance & Leave Solver', icon: Percent },
+    { id: 'academics', label: 'Academics & Grade Matrix', icon: Award },
+    { id: 'assignments', label: 'Assignments Tracker', icon: CheckSquare },
+    { id: 'exams', label: 'Exam Timetable', icon: Calendar },
+    { id: 'fees', label: 'Fees & Financial Dues', icon: CreditCard },
+    { id: 'notices', label: 'Campus Notices', icon: Bell },
     { id: 'ai-assistant', label: 'AI Companion', icon: Bot, badge: 'AI' },
-    { id: 'profile', label: 'Profile', icon: User }
+    { id: 'profile', label: 'Account Profile', icon: User }
   ];
 
   const adminNavItems = [
@@ -103,23 +104,23 @@ export default function Layout({
   const getPageTitle = (view) => {
     switch (view) {
       case 'dashboard': return 'Dashboard Overview';
-      case 'attendance': return 'Attendance Records & Leave Solver';
+      case 'attendance': return 'Attendance & Leave Solver';
       case 'academics': return 'Academic Marks & Target CGPA';
-      case 'assignments': return 'Assignments & Submissions';
+      case 'assignments': return 'Assignments Tracker';
       case 'exams': return 'Examination Timetable';
-      case 'fees': return 'Fee Statement & Receipts';
+      case 'fees': return 'Fee Statement & Dues';
       case 'notices': return 'Campus Announcements';
-      case 'ai-assistant': return 'CollegeAI Intelligent Companion';
+      case 'ai-assistant': return 'CollegeAI Companion';
       case 'profile': return 'User Profile Details';
       case 'admin-dashboard': return 'Admin Management Console';
       case 'admin-attendance': return 'Modify Attendance Records';
       case 'admin-notices': return 'Broadcast Campus Notice';
-      default: return 'CollegeAI';
+      default: return 'CollegeAI Portal';
     }
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+    <div className="min-h-screen flex bg-slate-50 dark:bg-[#070a12] text-slate-900 dark:text-slate-100 transition-colors duration-300">
       
       {/* LEFT NAVIGATION SIDEBAR (Desktop) */}
       {currentUser && (
@@ -139,24 +140,36 @@ export default function Layout({
               </div>
               {sidebarOpen && (
                 <div className="flex flex-col">
-                  <span className="font-display font-bold text-base tracking-tight text-slate-900 dark:text-white leading-none">
-                    College<span className="text-indigo-600 dark:text-indigo-400">AI</span>
-                  </span>
-                  <span className="text-[10px] text-slate-400 font-medium mt-0.5">Academic Companion</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-display font-extrabold text-base tracking-tight text-slate-900 dark:text-white leading-none">
+                      College<span className="text-indigo-600 dark:text-indigo-400">AI</span>
+                    </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 font-semibold mt-0.5 tracking-wide">Academic Companion</span>
                 </div>
               )}
             </div>
 
             <button 
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors"
             >
               <ChevronRight className={`h-4 w-4 transition-transform duration-300 ${sidebarOpen ? 'rotate-180' : ''}`} />
             </button>
           </div>
 
+          {/* Navigation Category Header */}
+          {sidebarOpen && (
+            <div className="px-5 pt-4 pb-1">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-display">
+                {currentUser?.role === 'ADMIN' ? 'Admin Controls' : 'Main Navigation'}
+              </span>
+            </div>
+          )}
+
           {/* Navigation Links */}
-          <nav className="flex-grow p-3 flex flex-col gap-1 overflow-y-auto">
+          <nav className="flex-grow px-3 py-2 flex flex-col gap-1 overflow-y-auto">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentView === item.id;
@@ -167,12 +180,12 @@ export default function Layout({
                   title={!sidebarOpen ? item.label : undefined}
                   className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-display text-xs font-semibold transition-all duration-200 group relative ${
                     isActive
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                      ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-500/25'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/50'
                   }`}
                 >
                   <Icon className={`h-4 w-4 shrink-0 transition-transform ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
-                  {sidebarOpen && <span>{item.label}</span>}
+                  {sidebarOpen && <span className="truncate">{item.label}</span>}
                   
                   {item.badge && sidebarOpen && (
                     <span className={`ml-auto text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
@@ -190,7 +203,7 @@ export default function Layout({
           <div className="p-3 border-t border-slate-200/80 dark:border-slate-800/80">
             <div className={`p-2 rounded-xl flex items-center justify-between ${sidebarOpen ? 'bg-slate-100/60 dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50' : ''}`}>
               <div className="flex items-center gap-2.5 overflow-hidden">
-                <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
                   {currentUser.name[0]}
                 </div>
                 {sidebarOpen && (
@@ -241,7 +254,7 @@ export default function Layout({
                 <div className="p-1.5 rounded-lg bg-indigo-600 text-white">
                   <GraduationCap className="h-5 w-5" />
                 </div>
-                <span className="font-display font-bold text-lg text-slate-900 dark:text-white">
+                <span className="font-display font-extrabold text-lg text-slate-900 dark:text-white">
                   College<span className="text-indigo-600 dark:text-indigo-400">AI</span>
                 </span>
               </div>
@@ -253,7 +266,7 @@ export default function Layout({
                   {getPageTitle(currentView)}
                 </h1>
                 <span className="text-[11px] text-slate-400 font-medium hidden sm:inline-block mt-0.5">
-                  Personalized Academic Companion
+                  Personalized AI Academic Companion
                 </span>
               </div>
             )}
@@ -267,7 +280,7 @@ export default function Layout({
               <div className="relative hidden lg:flex items-center w-56">
                 <input
                   type="text"
-                  placeholder="Quick search..."
+                  placeholder="Search portal..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full glass-input text-xs py-1.5 pl-8 pr-3 text-slate-800 dark:text-slate-200"
@@ -341,13 +354,13 @@ export default function Layout({
 
         {/* FOOTER */}
         <footer className="px-6 py-4 border-t border-slate-200/80 dark:border-slate-800/80 text-center text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-2">
-          <span>© 2026 CollegeAI Hackathon Prototype. Developed by Team Member 2.</span>
+          <span>© 2026 CollegeAI Hackathon Prototype.</span>
           <div className="flex items-center gap-3">
-            <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-[10px] font-bold border border-emerald-500/20">
-              Mock Mode: Active
+            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-[10px] font-bold border border-emerald-500/20 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Mock API Engine
             </span>
-            <span className="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-mono text-[10px] font-bold border border-indigo-500/20">
-              WhatsApp API Engine Ready
+            <span className="px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-mono text-[10px] font-bold border border-indigo-500/20">
+              WhatsApp Integration Ready
             </span>
           </div>
         </footer>
