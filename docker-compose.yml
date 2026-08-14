@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: collegeai_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - DATABASE_URL=sqlite:///./collegeai.db
+      - SECRET_KEY=collegeai_hackathon_super_secret_jwt_key_2026
+    volumes:
+      - ./collegeai.db:/app/collegeai.db
+    restart: always
+
+  # Optional PostgreSQL container if switching from SQLite in production
+  # db:
+  #   image: postgres:15-alpine
+  #   container_name: collegeai_postgres
+  #   environment:
+  #     POSTGRES_DB: collegeai
+  #     POSTGRES_USER: collegeai_user
+  #     POSTGRES_PASSWORD: collegeai_password
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+
+# volumes:
+#   postgres_data:
