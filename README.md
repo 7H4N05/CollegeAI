@@ -1,53 +1,6 @@
 # CollegeAI 🎓🤖
 
-<<<<<<< HEAD
 Welcome to the **CollegeAI** project! This repository contains the code for a personalized AI college companion for students and parents.
-
----
-
-## Repository Structure
-
-- `frontend/`: React + Vite web application (Member 2).
-- `docs/`: System documentation and API contracts.
-- `docs/api_contract.md`: Endpoint specifications for Backend (Member 1) & Database/Auth (Member 3).
-
----
-
-## Frontend Setup & Run Instructions
-
-To run the frontend React application locally:
-
-### 1. Prerequisites
-Ensure you have **Node.js (v18+)** and **npm** installed.
-
-### 2. Installation
-Navigate into the `frontend/` directory and install the packages:
-```bash
-cd frontend
-npm install
-```
-
-### 3. Environment Variables
-Create a `.env` file in the `frontend/` directory (copied from `.env.example`):
-```env
-VITE_API_BASE_URL=/api
-VITE_USE_MOCK_API=true
-```
-- Set `VITE_USE_MOCK_API=true` to run the application fully in offline mockup mode (ideal for hackathon presentation and standalone frontend development).
-- Set `VITE_USE_MOCK_API=false` to connect to the live Python FastAPI backend.
-
-### 4. Run Development Server
-Start the local server on port 3000:
-```bash
-npm run dev
-```
-
-### 5. Run Calculations Tests
-Execute the mathematical validation tests for attendance and leave capacity formulas:
-```bash
-npm run test
-=======
-**Personalized AI College Companion for Students and Parents**
 
 CollegeAI is a smart, role-aware academic assistant designed to provide accurate, real-time insights into student attendance, marks, schedules, assignments, fees, and college announcements.
 
@@ -76,7 +29,52 @@ CollegeAI is a smart, role-aware academic assistant designed to provide accurate
 
 ---
 
-## 🚀 Quick Start Guide
+## Repository Structure
+
+- `frontend/`: React + Vite web application (Member 2).
+- `docs/`: System documentation and API contracts.
+- `docs/api_contract.md`: Endpoint specifications for Backend (Member 1) & Database/Auth (Member 3).
+
+---
+
+## 💻 Frontend Setup & Run Instructions
+
+To run the frontend React application locally:
+
+### 1. Prerequisites
+Ensure you have **Node.js (v18+)** and **npm** installed.
+
+### 2. Installation
+Navigate into the `frontend/` directory and install the packages:
+```bash
+cd frontend
+npm install
+```
+
+### 3. Environment Variables
+Create a `.env` file in the `frontend/` directory (copied from `.env.example`):
+```env
+VITE_API_BASE_URL=/api
+VITE_USE_MOCK_API=true
+```
+- Set `VITE_USE_MOCK_API=true` to run the application fully in offline mockup mode.
+- Set `VITE_USE_MOCK_API=false` to connect to the live Python FastAPI backend.
+
+### 4. Run Development Server
+Start the local server on port 3000:
+```bash
+npm run dev
+```
+
+### 5. Run Calculations Tests
+Execute the mathematical validation tests for attendance and leave capacity formulas:
+```bash
+npm run test
+```
+
+---
+
+## 🚀 Backend Quick Start Guide
 
 ### 1. Environment Setup
 Copy the `.env.example` file to `.env`:
@@ -99,13 +97,11 @@ python backend/tests/run_tests.py
 ### 4. Run with Docker Compose
 ```bash
 docker-compose up --build
->>>>>>> 636399c2c8a5b232564b030599f53cbcdd71d1bd
 ```
 
 ---
 
-<<<<<<< HEAD
-## Hackathon Demo Personas
+## 🎭 Hackathon Demo Personas
 
 When running in Mock Mode, you can bypass manual logins using the **Demo Console** floating in the bottom-right corner. It allows hot-swapping between the following preset personas:
 
@@ -116,7 +112,9 @@ When running in Mock Mode, you can bypass manual logins using the **Demo Console
 5. **Aditya Verma (Student/Parent)**: Satisfactory attendance (80%), 2 upcoming exams next week.
 6. **Ananya Iyer (Student/Parent)**: Borderline attendance below threshold (74%), high academic CGPA.
 7. **System Administrator**: Allows you to modify student attendance records and dispatch new notices dynamically.
-=======
+
+---
+
 ## 🧪 Demo Login Credentials
 
 All test accounts use password: `password123`
@@ -139,4 +137,3 @@ All test accounts use password: `password123`
 - [API Documentation](docs/API_DOCUMENTATION.md)
 - [Architecture & Design](docs/ARCHITECTURE.md)
 - [WhatsApp Integration Plan](docs/WHATSAPP_INTEGRATION.md)
->>>>>>> 636399c2c8a5b232564b030599f53cbcdd71d1bd
