@@ -120,7 +120,7 @@ export default function Layout({
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-50 dark:bg-[#070a12] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+    <div className="w-full min-h-screen flex bg-slate-50 dark:bg-[#070a12] text-slate-900 dark:text-slate-100 transition-colors duration-300">
       
       {/* LEFT NAVIGATION SIDEBAR (Desktop) */}
       {currentUser && (
@@ -228,13 +228,13 @@ export default function Layout({
         </aside>
       )}
 
-      {/* MAIN CONTAINER */}
-      <div className={`flex-grow flex flex-col min-w-0 transition-all duration-300 ${
+      {/* MAIN CONTAINER - CENTERING & FULL WIDTH */}
+      <div className={`w-full flex-grow flex flex-col items-center min-w-0 transition-all duration-300 ${
         currentUser ? (sidebarOpen ? 'md:ml-64' : 'md:ml-20') : ''
       }`}>
         
         {/* TOP HEADER */}
-        <header className="sticky top-0 z-30 glass-header h-16 px-4 sm:px-6 flex items-center justify-between gap-4">
+        <header className="w-full sticky top-0 z-30 glass-header h-16 px-4 sm:px-8 flex items-center justify-between gap-4">
           
           <div className="flex items-center gap-3">
             {currentUser && (
@@ -248,15 +248,18 @@ export default function Layout({
 
             {!currentUser && (
               <div 
-                className="flex items-center gap-2 cursor-pointer"
+                className="flex items-center gap-2.5 cursor-pointer"
                 onClick={() => setCurrentView('landing')}
               >
-                <div className="p-1.5 rounded-lg bg-indigo-600 text-white">
+                <div className="p-2 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20">
                   <GraduationCap className="h-5 w-5" />
                 </div>
-                <span className="font-display font-extrabold text-lg text-slate-900 dark:text-white">
-                  College<span className="text-indigo-600 dark:text-indigo-400">AI</span>
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-display font-extrabold text-xl text-slate-900 dark:text-white leading-none">
+                    College<span className="text-indigo-600 dark:text-indigo-400">AI</span>
+                  </span>
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                </div>
               </div>
             )}
 
@@ -302,7 +305,7 @@ export default function Layout({
             {currentUser && (
               <button
                 onClick={() => setDemoConsoleOpen(true)}
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 transition-all"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 transition-all"
               >
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>Persona: {currentUser.name.split(' ')[0]}</span>
@@ -312,7 +315,7 @@ export default function Layout({
             {!currentUser && (
               <button
                 onClick={() => setCurrentView('login')}
-                className="btn-primary text-xs px-4 py-2"
+                className="btn-primary text-xs px-5 py-2.5 shadow-md shadow-indigo-500/20"
               >
                 Sign In
               </button>
@@ -323,7 +326,7 @@ export default function Layout({
 
         {/* MOBILE NAVIGATION DRAWER */}
         {mobileMenuOpen && currentUser && (
-          <div className="md:hidden glass-header border-b border-slate-200 dark:border-slate-800 p-4 flex flex-col gap-1 animate-fade-in">
+          <div className="w-full md:hidden glass-header border-b border-slate-200 dark:border-slate-800 p-4 flex flex-col gap-1 animate-fade-in">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentView === item.id;
@@ -347,13 +350,13 @@ export default function Layout({
           </div>
         )}
 
-        {/* MAIN BODY CONTENT */}
-        <main className="flex-grow p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto flex flex-col">
+        {/* MAIN BODY CONTENT - CENTERED MAXIMUM WIDTH CONTAINER */}
+        <main className="w-full flex-grow p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto flex flex-col items-center justify-start">
           {children}
         </main>
 
         {/* FOOTER */}
-        <footer className="px-6 py-4 border-t border-slate-200/80 dark:border-slate-800/80 text-center text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-2">
+        <footer className="w-full px-6 py-4 border-t border-slate-200/80 dark:border-slate-800/80 text-center text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-2 max-w-6xl mx-auto">
           <span>© 2026 CollegeAI Hackathon Prototype.</span>
           <div className="flex items-center gap-3">
             <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-[10px] font-bold border border-emerald-500/20 flex items-center gap-1">

@@ -71,7 +71,7 @@ export default function App() {
       theme={theme}
       setTheme={setTheme}
     >
-      <div className="flex-grow flex flex-col justify-start">
+      <div className="w-full flex-grow flex flex-col items-center justify-start">
         
         {currentView === 'landing' && (
           <Landing onStart={(view) => setCurrentView(view)} />

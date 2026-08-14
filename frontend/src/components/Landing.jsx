@@ -48,56 +48,52 @@ export default function Landing({ onStart }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center text-center py-6 gap-16 max-w-5xl mx-auto w-full animate-fade-in relative">
+    <div className="w-full flex flex-col items-center justify-center text-center py-4 sm:py-8 gap-10 max-w-5xl mx-auto animate-fade-in relative">
       
-      {/* Ambient Glow Backdrops */}
-      <div className="ambient-glow -top-20 -left-20"></div>
-      <div className="ambient-glow top-1/2 -right-20"></div>
-
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center text-center max-w-3xl mx-auto gap-6 mt-4 relative z-10">
+      <section className="w-full flex flex-col items-center justify-center text-center max-w-3xl mx-auto gap-5">
         
         <div className="inline-flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-display font-bold text-xs border border-indigo-500/20 shadow-sm">
           <Sparkles className="h-3.5 w-3.5 text-indigo-500" />
-          <span>Hackathon Prototype Showcase • CollegeAI Engine</span>
+          <span>Hackathon Showcase • CollegeAI Engine</span>
         </div>
 
-        <h1 className="font-display font-extrabold text-4xl sm:text-6xl tracking-tight text-slate-900 dark:text-white leading-[1.15] text-center">
-          Your Intelligent <br />
+        <h1 className="font-display font-extrabold text-3xl sm:text-5xl lg:text-6xl tracking-tight text-slate-900 dark:text-white leading-[1.15] text-center w-full">
+          Your Intelligent <br className="hidden sm:inline" />
           <span className="text-gradient-indigo">AI College Companion</span>
         </h1>
 
-        <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed font-normal text-center">
+        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed font-normal text-center">
           CollegeAI combines identity permissions with real college data and deterministic math solvers to deliver instant academic intelligence for <span className="font-semibold text-slate-900 dark:text-white">students & parents</span>.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-2">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-1">
           <button 
             onClick={() => onStart('login')}
-            className="btn-primary text-sm px-8 py-3.5 shadow-xl shadow-indigo-500/25"
+            className="btn-primary text-xs sm:text-sm px-8 py-3.5 shadow-xl shadow-indigo-500/25 w-full sm:w-auto"
           >
             Launch Companion Portal <ArrowRight className="h-4 w-4" />
           </button>
           <button 
             onClick={() => onStart('login')}
-            className="btn-secondary text-sm px-8 py-3.5"
+            className="btn-secondary text-xs sm:text-sm px-8 py-3.5 w-full sm:w-auto"
           >
             Explore Personas & Chat
           </button>
         </div>
 
         {/* Feature Badges */}
-        <div className="flex flex-wrap items-center justify-center gap-6 mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+          <div className="flex items-center gap-1.5">
+            <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
             <span>Zero LLM Math Hallucination</span>
           </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-indigo-500" />
+          <div className="flex items-center gap-1.5">
+            <CheckCircle2 className="h-4 w-4 text-indigo-500 shrink-0" />
             <span>Timetable-Aware Solvers</span>
           </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-purple-500" />
+          <div className="flex items-center gap-1.5">
+            <CheckCircle2 className="h-4 w-4 text-purple-500 shrink-0" />
             <span>Parent Authorization Guard</span>
           </div>
         </div>
@@ -105,7 +101,7 @@ export default function Landing({ onStart }) {
       </section>
 
       {/* STATISTICS COUNTER BAR */}
-      <section className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-4xl mx-auto relative z-10">
+      <section className="w-full grid grid-cols-2 sm:grid-cols-4 gap-3.5 max-w-4xl mx-auto">
         <div className="glass-card p-4 flex flex-col items-center justify-center text-center">
           <span className="font-display font-extrabold text-2xl text-gradient-indigo">100%</span>
           <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-0.5">Deterministic Accuracy</span>
@@ -125,10 +121,10 @@ export default function Landing({ onStart }) {
       </section>
 
       {/* INTERACTIVE DEMO PREVIEW SWITCHER */}
-      <section className="glass-card p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 max-w-4xl mx-auto w-full relative z-10">
-        <div className="flex flex-col gap-6 text-left">
+      <section className="w-full glass-card p-6 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 max-w-4xl mx-auto text-left">
+        <div className="flex flex-col gap-5">
           
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 dark:border-slate-800/80 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 dark:border-slate-800/80 pb-4">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-teal-500/10 text-teal-600 dark:text-teal-400 font-display font-semibold text-xs border border-teal-500/20 mb-1">
                 <Zap className="h-3.5 w-3.5" />
@@ -143,7 +139,7 @@ export default function Landing({ onStart }) {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
             
             {/* Query Selector Buttons */}
             <div className="md:col-span-5 flex flex-col gap-2">
@@ -199,16 +195,16 @@ export default function Landing({ onStart }) {
       </section>
 
       {/* Feature Cards Grid */}
-      <section className="flex flex-col items-center justify-center text-center max-w-4xl mx-auto w-full gap-6 relative z-10">
+      <section className="w-full flex flex-col items-center justify-center text-center max-w-4xl mx-auto gap-6">
         <div className="flex flex-col items-center justify-center text-center gap-1">
           <h2 className="text-2xl font-display font-bold text-slate-900 dark:text-white">Core System Capabilities</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">Everything accessible via conversational chat and interactive visual cards</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
           
-          <div className="glass-card p-6 flex flex-col items-center text-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+          <div className="glass-card p-5 flex flex-col items-center text-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
               <Percent className="h-5 w-5" />
             </div>
             <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">Leave Capacity</h3>
@@ -217,8 +213,8 @@ export default function Landing({ onStart }) {
             </p>
           </div>
 
-          <div className="glass-card p-6 flex flex-col items-center text-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+          <div className="glass-card p-5 flex flex-col items-center text-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center">
               <Award className="h-5 w-5" />
             </div>
             <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">Target Grade Matrix</h3>
@@ -227,8 +223,8 @@ export default function Landing({ onStart }) {
             </p>
           </div>
 
-          <div className="glass-card p-6 flex flex-col items-center text-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center">
+          <div className="glass-card p-5 flex flex-col items-center text-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center">
               <Calendar className="h-5 w-5" />
             </div>
             <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">Exams & Timetables</h3>
@@ -237,8 +233,8 @@ export default function Landing({ onStart }) {
             </p>
           </div>
 
-          <div className="glass-card p-6 flex flex-col items-center text-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+          <div className="glass-card p-5 flex flex-col items-center text-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
               <Bot className="h-5 w-5" />
             </div>
             <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">Parent Safety Guard</h3>
