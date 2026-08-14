@@ -23,7 +23,7 @@ async def verify_whatsapp_webhook(
     """
     if hub_challenge:
         return Response(content=hub_challenge, media_type="text/plain")
-    return {"status": "CollegeAI WhatsApp Webhook Active", "challenge": hub_challenge}
+    return {"status": "EduMitra WhatsApp Webhook Active", "challenge": hub_challenge}
 
 
 @router.post("/webhook")

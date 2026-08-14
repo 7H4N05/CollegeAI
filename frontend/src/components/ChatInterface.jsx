@@ -164,11 +164,11 @@ export default function ChatInterface({ currentUser, currentStudentId, presetQue
         <div className="bg-slate-950/90 border-b border-white/10 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-teal-500 to-indigo-600 text-white flex items-center justify-center font-display font-bold text-sm shadow-md">
-              CA
+              EM
             </div>
             <div>
               <h3 className="font-display font-bold text-sm text-white flex items-center gap-2">
-                CollegeAI Assistant
+                EduMitra Assistant
                 <span className="text-[10px] bg-teal-500/20 text-teal-300 font-semibold px-2 py-0.5 rounded-full border border-teal-500/30">
                   Verified Engine
                 </span>

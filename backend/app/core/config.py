@@ -14,7 +14,7 @@ except ImportError:
             pass
 
 class Settings:
-    PROJECT_NAME: str = os.getenv("PROJECT_NAME", "CollegeAI API")
+    PROJECT_NAME: str = os.getenv("PROJECT_NAME", "EduMitra API")
     VERSION: str = os.getenv("VERSION", "1.0.0")
     API_V1_STR: str = os.getenv("API_V1_STR", "/api/v1")
     PORT: int = int(os.getenv("PORT", "8000"))

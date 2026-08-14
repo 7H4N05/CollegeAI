@@ -1,4 +1,4 @@
-# API Contract - CollegeAI
+# API Contract - EduMitra
 
 This document outlines the API contract between the React Frontend, Python FastAPI Backend, and SQLite Database.
 

@@ -291,7 +291,7 @@ export default function StudentDashboard({ currentStudentId, onAskChatShortcut }
             <div className="glass-panel-glow p-6 rounded-3xl border border-teal-500/30 flex flex-col gap-4">
               <div className="flex items-center gap-2 text-teal-400">
                 <Sparkles className="h-5 w-5" />
-                <h3 className="text-base font-bold font-display text-white">Ask CollegeAI Advisor</h3>
+                <h3 className="text-base font-bold font-display text-white">Ask EduMitra Advisor</h3>
               </div>
 
               <div className="flex flex-col gap-2.5">

@@ -1,4 +1,4 @@
-# CollegeAI Hackathon Demo Credentials
+# EduMitra Hackathon Demo Credentials
 
 All test accounts use the password: `password123`
 

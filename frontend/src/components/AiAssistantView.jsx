@@ -214,7 +214,7 @@ export default function AiAssistantView({ currentUser, currentStudentId, presetQ
             </div>
             <div>
               <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
-                CollegeAI Assistant
+                EduMitra Assistant
                 <span className="text-[10px] bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold px-2 py-0.5 rounded-full border border-indigo-500/20">
                   Verified Engine
                 </span>

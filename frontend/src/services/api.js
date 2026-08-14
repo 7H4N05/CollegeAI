@@ -1,5 +1,5 @@
 /**
- * CollegeAI API Client Service
+ * EduMitra API Client Service
  * Handles both Mock Mode (for local development and hackathon demos)
  * and Live Mode (connecting to FastAPI backend via HTTP requests).
  */
@@ -511,7 +511,7 @@ const mockTimetable = {
 let mockAnnouncements = [
   { id: 'ANC001', title: 'Independence Day Celebrations', content: 'Flag hoisting at 08:30 AM in the central courtyard. Attendance is highly encouraged.', date: '2026-08-12', category: 'ADMIN' },
   { id: 'ANC002', title: 'Mid Semester II Exam Schedule', content: 'Mid-Sem II examinations will commence from 24th August 2026. Hall tickets available on portal.', date: '2026-08-10', category: 'EXAM' },
-  { id: 'ANC003', title: 'AI/ML Hackathon Registrations Open', content: 'Register in groups of 3 for the CollegeAI hackathon before 20th August 2026.', date: '2026-08-08', category: 'FEST' },
+  { id: 'ANC003', title: 'AI/ML Hackathon Registrations Open', content: 'Register in groups of 3 for the EduMitra hackathon before 20th August 2026.', date: '2026-08-08', category: 'FEST' },
   { id: 'ANC004', title: 'Odd Semester Course Registration Deadline', content: 'Complete online course registration for next semester by 18th August to avoid late fees.', date: '2026-08-05', category: 'ACADEMIC' }
 ];
 
@@ -966,7 +966,7 @@ export function simulateAIChatReply(role, studentId, message) {
   // Fallback: General conversation
   let roleLabel = role === 'PARENT' ? 'parent' : 'student';
   return {
-    reply: `Hello! I am CollegeAI, your personal assistant. As a logged-in ${roleLabel}, you can ask me real-time queries about class schedules, attendance calculations, leave capacity projections, exams, assignments, internal marks, or college fees. For example, ask me: "How many classes can I miss?" or "What are my upcoming exams?"`,
+    reply: `Hello! I am EduMitra, your personal assistant. As a logged-in ${roleLabel}, you can ask me real-time queries about class schedules, attendance calculations, leave capacity projections, exams, assignments, internal marks, or college fees. For example, ask me: "How many classes can I miss?" or "What are my upcoming exams?"`,
     tool_called: null,
     data: null
   };

@@ -1,8 +1,8 @@
-# CollegeAI 🎓🤖
+# EduMitra 🎓🤖
 
-Welcome to the **CollegeAI** project! This repository contains the code for a personalized AI college companion for students and parents.
+Welcome to the **EduMitra** project! This repository contains the code for a personalized AI college companion for students and parents.
 
-CollegeAI is a smart, role-aware academic assistant designed to provide accurate, real-time insights into student attendance, marks, schedules, assignments, fees, and college announcements.
+EduMitra is a smart, role-aware academic assistant designed to provide accurate, real-time insights into student attendance, marks, schedules, assignments, fees, and college announcements.
 
 ---
 

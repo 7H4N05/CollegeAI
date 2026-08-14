@@ -1,6 +1,6 @@
 # WhatsApp Integration Design
 
-This document details how the CollegeAI backend APIs and AI Agent services easily connect to the Meta WhatsApp Cloud API without duplicating any business logic.
+This document details how the EduMitra backend APIs and AI Agent services easily connect to the Meta WhatsApp Cloud API without duplicating any business logic.
 
 ---
 

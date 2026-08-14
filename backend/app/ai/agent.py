@@ -289,7 +289,7 @@ class CollegeAIAgent:
             profile_res = execute_tool("get_student_profile", {"student_id": target_student_id})
             structured_data["profile"] = profile_res
             
-            reply_lines.append(f"Hello {user_name}! I am **CollegeAI**, your academic ERP assistant.")
+            reply_lines.append(f"Hello {user_name}! I am **EduMitra**, your academic ERP assistant.")
             reply_lines.append(f"I have connected to records for **{profile_res['name']}** (Roll: {profile_res['roll_number']}, Branch: {profile_res['branch']}).")
             reply_lines.append("\nYou can ask me questions like:")
             reply_lines.append("• *'What is my current attendance?'*")

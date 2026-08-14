@@ -1,6 +1,6 @@
-# CollegeAI Backend API Documentation
+# EduMitra Backend API Documentation
 
-Welcome to the **CollegeAI REST API Specification**. This document provides the complete API reference for Member 2 (Frontend) and future WhatsApp integration developers.
+Welcome to the **EduMitra REST API Specification**. This document provides the complete API reference for Member 2 (Frontend) and future WhatsApp integration developers.
 
 ---
 

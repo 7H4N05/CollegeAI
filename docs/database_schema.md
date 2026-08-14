@@ -1,4 +1,4 @@
-# CollegeAI Database Schema & Authorization Model
+# EduMitra Database Schema & Authorization Model
 
 This document outlines the entity-relationship specifications, table columns, constraints, and security authorization rules enforced across the database layer.
 

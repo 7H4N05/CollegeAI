@@ -1,10 +1,10 @@
-# CollegeAI System Architecture
+# EduMitra System Architecture
 
 ## Overview
-CollegeAI is built with an **API-First Clean Architecture** separating identity, role-based authorization, deterministic math engines, data services, and AI orchestration.
+EduMitra is built with an **API-First Clean Architecture** separating identity, role-based authorization, deterministic math engines, data services, and AI orchestration.
 
 ```
-CollegeAI Backend System
+EduMitra Backend System
 ├── app/
 │   ├── main.py            # FastAPI entry point & CORS
 │   ├── core/              # Security, JWT auth, exceptions, config

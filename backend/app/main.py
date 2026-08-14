@@ -34,7 +34,7 @@ app.include_router(whatsapp.router, prefix=settings.API_V1_STR)
 @app.get("/api")
 def root():
     return {
-        "project": "CollegeAI",
+        "project": "EduMitra",
         "status": "online",
         "version": settings.VERSION,
         "docs": "/docs",
