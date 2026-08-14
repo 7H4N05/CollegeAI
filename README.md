@@ -1,22 +1,26 @@
-# CollegeAI Backend Service
+# CollegeAI 🎓🤖
 
-**CollegeAI** is a personalized AI college companion for **students and parents**. It combines role-based access control, real college data retrieval, deterministic academic calculation engines, and natural-language AI response generation.
+**Personalized AI College Companion for Students and Parents**
+
+CollegeAI is a smart, role-aware academic assistant designed to provide accurate, real-time insights into student attendance, marks, schedules, assignments, fees, and college announcements.
 
 ---
 
 ## 🌟 Key Features
 
-1. **Role-Based Authorization**:
-   - **Students**: Access personal attendance, marks, fees, timetable, and exams.
-   - **Parents**: Access verified data for authorized children only (Strict 403 authorization guard).
-   - **Admin**: System data administration.
+1. **Role-Aware Security & Authorization Engine**:
+   - JWT authentication (`HS256`).
+   - Strict tenant-level data isolation:
+     - **Students** can strictly only access their own records.
+     - **Parents** can strictly only access their authorized child's records.
+     - **Admins** have system management access.
 
 2. **Deterministic Calculation Engines**:
    - **Attendance Engine**: Calculates exact current %, maximum leave capacity $x$ ($attended / (conducted + x) \ge 0.75$), and consecutive classes needed $y$ to reach target %.
-   - **Leave Impact Projection**: Uses timetable schedules to calculate exact per-subject attendance drop during planned leave dates.
+   - **Timetable Leave Projection**: Evaluates exact subject classes affected by planned date ranges.
    - **Marks Target Engine**: Calculates required end-semester exam score (out of 60) to achieve target grade or CGPA.
 
-3. **AI Function Calling Layer**:
+3. **AI Function Calling & Tool Router**:
    - Isolates LLM behind structured tool calling (`get_student_profile`, `get_attendance`, `calculate_leave_impact`, `get_marks`, `get_fees`, `get_announcements`).
    - Prevents AI hallucination of grades, attendance, or fees.
 
@@ -25,7 +29,7 @@
 
 ---
 
-## 🚀 Quickstart & Server Launch
+## 🚀 Quick Start Guide
 
 ### 1. Environment Setup
 Copy the `.env.example` file to `.env`:
@@ -33,14 +37,14 @@ Copy the `.env.example` file to `.env`:
 cp .env.example .env
 ```
 
-### 2. Run Locally with Python
+### 2. Run FastAPI Backend Server
 ```bash
-cd backend
-python -m uvicorn app.main:app --reload --port 8000
+python -m uvicorn backend.app.main:app --reload --port 8000
 ```
-- Open Interactive API Docs: `http://localhost:8000/docs`
+- API Documentation: [http://localhost:8000/docs](http://localhost:8000/docs)
+- Healthcheck: [http://localhost:8000/health](http://localhost:8000/health)
 
-### 3. Run Automated Tests
+### 3. Run Automated Test Suite
 ```bash
 python backend/tests/run_tests.py
 ```
@@ -54,17 +58,19 @@ docker-compose up --build
 
 ## 🧪 Demo Login Credentials
 
-| Username | Password | Role | Entity ID | Highlights |
-| :--- | :--- | :--- | :--- | :--- |
-| `student1` | `password123` | `STUDENT` | `STU101` | High attendance (Rahul Sharma, 88%) |
-| `student2` | `password123` | `STUDENT` | `STU102` | Borderline attendance (Priya Patel, 76%, 41/50 DSA) |
-| `student3` | `password123` | `STUDENT` | `STU103` | Low attendance (Amit Kumar, 64%) |
-| `student4` | `password123` | `STUDENT` | `STU104` | Pending fee balance (Ananya Roy) |
-| `student5` | `password123` | `STUDENT` | `STU105` | Pending assignments (Vikram Singh) |
-| `student6` | `password123` | `STUDENT` | `STU106` | Upcoming mid-term exams (Sneha Reddy) |
-| `parent1` | `password123` | `PARENT` | `P201` | Parent of STU101 |
-| `parent2` | `password123` | `PARENT` | `P202` | Parent of STU102 |
-| `admin` | `password123` | `ADMIN` | `A301` | Administrator |
+All test accounts use password: `password123`
+
+| Username | Role | Student ID | Highlights |
+| :--- | :--- | :--- | :--- |
+| `student1` | `STUDENT` | `STU101` | High attendance (Rahul Sharma, 88%) |
+| `student2` | `STUDENT` | `STU102` | Borderline attendance (Priya Patel, 76%, 41/50 DSA) |
+| `student3` | `STUDENT` | `STU103` | Low attendance (Amit Kumar, 64%) |
+| `student4` | `STUDENT` | `STU104` | Pending fee balance (Ananya Roy) |
+| `student5` | `STUDENT` | `STU105` | Pending assignments (Vikram Singh) |
+| `student6` | `STUDENT` | `STU106` | Upcoming mid-term exams (Sneha Reddy) |
+| `parent1` | `PARENT` | `P201` | Parent of STU101 |
+| `parent2` | `PARENT` | `P202` | Parent of STU102 |
+| `admin` | `ADMIN` | `A301` | Administrator |
 
 ---
 
