@@ -17,14 +17,13 @@ import {
 } from 'lucide-react';
 import { api } from '../services/api';
 
-// Circular Progress Gauge
 function ProgressRing({ percentage, size = 56, strokeWidth = 5, color = '#10b981' }) {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const offset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
+    <div className="relative inline-flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
       <svg className="progress-ring w-full h-full">
         <circle
           className="stroke-slate-200 dark:stroke-slate-800"
@@ -99,7 +98,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
 
   if (loading || !profile || !attendance || !marks || !fees) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 text-slate-400">
+      <div className="flex flex-col items-center justify-center py-24 text-slate-400 my-auto">
         <div className="h-10 w-10 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin mb-3"></div>
         <p className="text-xs font-semibold font-display">Loading academic dashboard...</p>
       </div>
@@ -113,10 +112,10 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
   const isCriticalAttendance = overallAtt < 75;
 
   return (
-    <div className="flex flex-col gap-6 animate-fade-in">
+    <div className="flex flex-col gap-6 animate-fade-in w-full">
       
       {/* GREETING HEADER */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-6">
         <div>
           <h2 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 dark:text-white tracking-tight">
             Good morning, {currentUser.name.split(' ')[0]} 👋
@@ -128,7 +127,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
 
         <button
           onClick={() => onAskChatShortcut("What is my current attendance?")}
-          className="btn-primary text-xs px-4 py-2.5 shadow-lg shadow-indigo-500/20 w-fit"
+          className="btn-primary text-xs px-4 py-2.5 shadow-lg shadow-indigo-500/20 w-fit shrink-0"
         >
           <Bot className="h-4 w-4" />
           <span>Ask AI Companion</span>
@@ -149,7 +148,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
           </div>
           <button 
             onClick={() => onAskChatShortcut("How is my child's attendance?")}
-            className="px-3 py-1.5 rounded-xl bg-red-500/20 text-red-600 dark:text-red-300 font-bold text-[10px] whitespace-nowrap hover:bg-red-500/30 transition-all"
+            className="px-3 py-1.5 rounded-xl bg-red-500/20 text-red-600 dark:text-red-300 font-bold text-[10px] whitespace-nowrap hover:bg-red-500/30 transition-all shrink-0"
           >
             Query Advisor
           </button>
@@ -162,7 +161,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
         {/* Card 1: Attendance */}
         <div 
           onClick={() => onNavigate('attendance')}
-          className="glass-card p-4 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all"
+          className="glass-card p-5 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all"
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Attendance</span>
@@ -180,14 +179,14 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
                 {overallAtt >= 75 ? `+${(overallAtt - 75).toFixed(1)}% safe` : `-${(75 - overallAtt).toFixed(1)}% below limit`}
               </p>
             </div>
-            <ProgressRing percentage={overallAtt} size={50} color={overallAtt >= 75 ? '#10b981' : '#ef4444'} />
+            <ProgressRing percentage={overallAtt} size={48} color={overallAtt >= 75 ? '#10b981' : '#ef4444'} />
           </div>
         </div>
 
         {/* Card 2: CGPA */}
         <div 
           onClick={() => onNavigate('academics')}
-          className="glass-card p-4 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all"
+          className="glass-card p-5 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all"
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">CGPA Score</span>
@@ -209,7 +208,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
         {/* Card 3: Pending Fees */}
         <div 
           onClick={() => onNavigate('fees')}
-          className="glass-card p-4 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all"
+          className="glass-card p-5 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all"
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pending Dues</span>
@@ -223,7 +222,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
               ₹{fees.pending.toLocaleString('en-IN')}
             </span>
             <p className="text-[10px] font-semibold text-slate-400 mt-0.5">
-              {fees.pending > 0 ? `Due date: ${fees.due_date}` : 'All fees paid'}
+              {fees.pending > 0 ? `Due: ${fees.due_date}` : 'All fees paid'}
             </p>
           </div>
         </div>
@@ -231,7 +230,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
         {/* Card 4: Pending Tasks */}
         <div 
           onClick={() => onNavigate('assignments')}
-          className="glass-card p-4 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all"
+          className="glass-card p-5 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all"
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Assignments</span>
@@ -253,7 +252,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
         {/* Card 5: Upcoming Exam */}
         <div 
           onClick={() => onNavigate('exams')}
-          className="glass-card p-4 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all col-span-2 lg:col-span-1"
+          className="glass-card p-5 flex flex-col justify-between gap-3 cursor-pointer hover:border-indigo-500/30 transition-all col-span-2 lg:col-span-1"
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Next Exam</span>
@@ -300,7 +299,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
             {/* Subject Breakdown List */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {attendance.records.map((rec) => (
-                <div key={rec.subject_code} className="p-3 rounded-xl bg-slate-100/60 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 flex items-center justify-between">
+                <div key={rec.subject_code} className="p-3.5 rounded-xl bg-slate-100/60 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 flex items-center justify-between">
                   <div className="flex flex-col">
                     <span className="text-xs font-bold text-slate-900 dark:text-white">{rec.subject_name}</span>
                     <span className="text-[10px] text-slate-400 font-medium">{rec.attended} / {rec.conducted} classes conducted</span>
@@ -332,7 +331,7 @@ export default function Dashboard({ currentUser, currentStudentId, onAskChatShor
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {marks.subjects.map((sub) => (
-                <div key={sub.code} className="p-3 rounded-xl bg-slate-100/60 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 flex flex-col gap-1.5">
+                <div key={sub.code} className="p-3.5 rounded-xl bg-slate-100/60 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 flex flex-col gap-1.5">
                   <div className="flex justify-between items-start">
                     <span className="text-xs font-bold text-slate-900 dark:text-white">{sub.name}</span>
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400">

@@ -63,25 +63,25 @@ export default function Login({ onLoginSuccess }) {
   };
 
   return (
-    <div className="max-w-md w-full mx-auto my-10 animate-fade-in flex flex-col gap-6">
+    <div className="min-h-[75vh] flex flex-col justify-center items-center my-auto py-8 max-w-md w-full mx-auto animate-fade-in gap-6 text-center">
       
-      <div className="text-center flex flex-col gap-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-display font-semibold text-xs border border-indigo-500/20 w-fit mx-auto">
+      <div className="flex flex-col items-center justify-center gap-2">
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-display font-bold text-xs border border-indigo-500/20">
           <Sparkles className="h-3.5 w-3.5" />
           <span>Role-Based Identity Portal</span>
         </div>
-        <h2 className="text-2xl font-display font-bold text-slate-900 dark:text-white">Sign In to CollegeAI</h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+        <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 dark:text-white">Sign In to CollegeAI</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
           Select your role to access personalized companion dashboards.
         </p>
       </div>
 
       {/* Role Selector Tabs */}
-      <div className="grid grid-cols-3 gap-1.5 bg-slate-200/60 dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200/80 dark:border-slate-800">
+      <div className="grid grid-cols-3 gap-1.5 bg-slate-200/60 dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 w-full">
         <button
           type="button"
           onClick={() => handleRoleChange('STUDENT')}
-          className={`flex flex-col items-center gap-1 py-2.5 rounded-xl text-xs font-bold font-display transition-all ${
+          className={`flex flex-col items-center justify-center gap-1 py-3 rounded-xl text-xs font-bold font-display transition-all ${
             role === 'STUDENT'
               ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
@@ -93,7 +93,7 @@ export default function Login({ onLoginSuccess }) {
         <button
           type="button"
           onClick={() => handleRoleChange('PARENT')}
-          className={`flex flex-col items-center gap-1 py-2.5 rounded-xl text-xs font-bold font-display transition-all ${
+          className={`flex flex-col items-center justify-center gap-1 py-3 rounded-xl text-xs font-bold font-display transition-all ${
             role === 'PARENT'
               ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
@@ -105,7 +105,7 @@ export default function Login({ onLoginSuccess }) {
         <button
           type="button"
           onClick={() => handleRoleChange('ADMIN')}
-          className={`flex flex-col items-center gap-1 py-2.5 rounded-xl text-xs font-bold font-display transition-all ${
+          className={`flex flex-col items-center justify-center gap-1 py-3 rounded-xl text-xs font-bold font-display transition-all ${
             role === 'ADMIN'
               ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm'
               : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
@@ -117,7 +117,7 @@ export default function Login({ onLoginSuccess }) {
       </div>
 
       {/* Main Form Glass Card */}
-      <div className="glass-card p-6 flex flex-col gap-5">
+      <div className="glass-card p-6 sm:p-8 flex flex-col gap-5 w-full text-left">
         {error && (
           <div className="p-3 text-xs bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 rounded-xl flex items-center gap-2 font-medium">
             <AlertCircle className="h-4 w-4 shrink-0" />
@@ -193,7 +193,7 @@ export default function Login({ onLoginSuccess }) {
           <button
             type="submit"
             disabled={loading}
-            className="btn-primary w-full py-3 text-xs font-bold mt-1 shadow-lg shadow-indigo-500/20"
+            className="btn-primary w-full py-3.5 text-xs font-bold mt-1 shadow-lg shadow-indigo-500/20"
           >
             {loading ? 'Authenticating...' : 'Sign In to Dashboard'}
             <ArrowRight className="h-4 w-4" />

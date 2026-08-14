@@ -105,11 +105,11 @@ export default function AiAssistantView({ currentUser, currentStudentId, presetQ
   };
 
   return (
-    <div className="grid grid-cols-12 gap-6 min-h-[calc(100vh-10rem)] max-h-[calc(100vh-10rem)] overflow-hidden">
+    <div className="grid grid-cols-12 gap-6 h-[calc(100vh-9.5rem)] min-h-[500px] w-full overflow-hidden">
       
       {/* Left Suggestion Sidebar */}
-      <div className="hidden lg:flex lg:col-span-4 flex-col gap-4 max-h-full overflow-hidden">
-        <div className="glass-card p-5 flex flex-col gap-2 border-l-4 border-l-indigo-600">
+      <div className="hidden lg:flex lg:col-span-4 flex-col gap-4 h-full overflow-hidden">
+        <div className="glass-card p-5 flex flex-col gap-2 border-l-4 border-l-indigo-600 shrink-0">
           <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-display font-bold text-xs">
             <ShieldCheck className="h-4 w-4" /> Role Security Verified
           </div>
@@ -120,12 +120,12 @@ export default function AiAssistantView({ currentUser, currentStudentId, presetQ
         </div>
 
         <div className="glass-card p-5 flex-grow flex flex-col gap-3 overflow-hidden">
-          <div className="flex items-center gap-2 border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
+          <div className="flex items-center gap-2 border-b border-slate-200/80 dark:border-slate-800/80 pb-3 shrink-0">
             <Sparkles className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
             <span className="font-display font-bold text-xs text-slate-900 dark:text-white">Suggested Conversational Prompts</span>
           </div>
 
-          <div className="flex flex-col gap-2 overflow-y-auto pr-1">
+          <div className="flex flex-col gap-2.5 overflow-y-auto pr-1">
             {quickPrompts.map((prompt, i) => (
               <button
                 key={i}
@@ -144,9 +144,9 @@ export default function AiAssistantView({ currentUser, currentStudentId, presetQ
       <div className="col-span-12 lg:col-span-8 glass-card flex flex-col h-full overflow-hidden shadow-2xl relative">
         
         {/* Chat Header */}
-        <div className="bg-slate-100/80 dark:bg-slate-900/80 border-b border-slate-200/80 dark:border-slate-800/80 px-6 py-4 flex items-center justify-between">
+        <div className="bg-slate-100/80 dark:bg-slate-900/80 border-b border-slate-200/80 dark:border-slate-800/80 px-6 py-4 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-display font-bold text-sm shadow-md shadow-indigo-500/20">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-display font-bold text-sm shadow-md shadow-indigo-500/20 shrink-0">
               CA
             </div>
             <div>
@@ -207,7 +207,7 @@ export default function AiAssistantView({ currentUser, currentStudentId, presetQ
         </div>
 
         {/* Chat Input */}
-        <div className="p-4 border-t border-slate-200/80 dark:border-slate-800/80 flex flex-col gap-2">
+        <div className="p-4 border-t border-slate-200/80 dark:border-slate-800/80 flex flex-col gap-2 shrink-0">
           {micActive && (
             <div className="text-xs text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-500/10 p-2 rounded-xl border border-indigo-500/20 text-center animate-pulse">
               Listening to voice input... Transcribing query into chat...

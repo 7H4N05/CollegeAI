@@ -15,26 +15,26 @@ import {
 
 export default function Landing({ onStart }) {
   return (
-    <div className="flex flex-col gap-16 py-8 animate-fade-in max-w-5xl mx-auto w-full">
+    <div className="flex flex-col items-center justify-center text-center py-8 gap-12 max-w-5xl mx-auto w-full animate-fade-in">
       
       {/* Hero Section */}
-      <section className="text-center max-w-3xl mx-auto flex flex-col items-center gap-6 mt-4">
+      <section className="flex flex-col items-center justify-center text-center max-w-3xl mx-auto gap-6 mt-2">
         
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-display font-bold text-xs border border-indigo-500/20 shadow-sm">
+        <div className="inline-flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-display font-bold text-xs border border-indigo-500/20 shadow-sm">
           <Sparkles className="h-3.5 w-3.5 text-indigo-500" />
           <span>Hackathon Prototype Showcase</span>
         </div>
 
-        <h1 className="font-display font-extrabold text-4xl sm:text-6xl tracking-tight text-slate-900 dark:text-white leading-tight">
+        <h1 className="font-display font-extrabold text-4xl sm:text-6xl tracking-tight text-slate-900 dark:text-white leading-tight text-center">
           Your Intelligent <br />
           <span className="text-indigo-600 dark:text-indigo-400">AI College Companion</span>
         </h1>
 
-        <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed font-normal">
+        <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed font-normal text-center">
           CollegeAI combines identity permissions with real college data and deterministic math solvers to deliver instant academic intelligence for <span className="font-semibold text-slate-900 dark:text-white">students & parents</span>.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 mt-2">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-2">
           <button 
             onClick={() => onStart('login')}
             className="btn-primary text-sm px-8 py-3.5 shadow-xl shadow-indigo-500/25"
@@ -50,7 +50,7 @@ export default function Landing({ onStart }) {
         </div>
 
         {/* Feature Badges */}
-        <div className="flex flex-wrap justify-center gap-6 mt-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <div className="flex flex-wrap items-center justify-center gap-6 mt-3 text-xs font-semibold text-slate-500 dark:text-slate-400">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 text-emerald-500" />
             <span>Zero LLM Math Hallucination</span>
@@ -68,8 +68,8 @@ export default function Landing({ onStart }) {
       </section>
 
       {/* WhatsApp Integration Preview Card */}
-      <section className="glass-card p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 relative overflow-hidden">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+      <section className="glass-card p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 max-w-4xl mx-auto w-full">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center text-left">
           
           <div className="md:col-span-6 flex flex-col gap-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-teal-500/10 text-teal-600 dark:text-teal-400 font-display font-semibold text-xs border border-teal-500/20 w-fit">
@@ -85,13 +85,13 @@ export default function Landing({ onStart }) {
               While we show an Apple-style web interface for the presentation, the backend uses an API-first design. The exact same calculation APIs and identity checks will power the WhatsApp Business bot.
             </p>
 
-            <div className="flex flex-col gap-2 mt-1">
+            <div className="flex flex-col gap-2.5 mt-1">
               <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
-                <ShieldCheck className="h-4 w-4 text-emerald-500" />
+                <ShieldCheck className="h-4 w-4 text-emerald-500 shrink-0" />
                 <span>Role-based student & parent data access controls</span>
               </div>
               <div className="flex items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
-                <ShieldCheck className="h-4 w-4 text-indigo-500" />
+                <ShieldCheck className="h-4 w-4 text-indigo-500 shrink-0" />
                 <span>Timetable-aware leave capacity calculators</span>
               </div>
             </div>
@@ -127,48 +127,55 @@ export default function Landing({ onStart }) {
       </section>
 
       {/* Feature Cards Grid */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        
-        <div className="glass-card p-5 flex flex-col gap-3">
-          <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
-            <Percent className="h-5 w-5" />
-          </div>
-          <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">Leave Capacity</h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
-            Calculate exact leave limits before hitting the 75% attendance threshold.
-          </p>
+      <section className="flex flex-col items-center justify-center text-center max-w-4xl mx-auto w-full gap-6">
+        <div className="flex flex-col items-center justify-center text-center gap-1">
+          <h2 className="text-2xl font-display font-bold text-slate-900 dark:text-white">Core System Capabilities</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Everything accessible via conversational chat and interactive visual cards</p>
         </div>
 
-        <div className="glass-card p-5 flex flex-col gap-3">
-          <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center">
-            <Award className="h-5 w-5" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 w-full">
+          
+          <div className="glass-card p-6 flex flex-col items-center text-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+              <Percent className="h-5 w-5" />
+            </div>
+            <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">Leave Capacity</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
+              Calculate exact leave limits before hitting the 75% attendance threshold.
+            </p>
           </div>
-          <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">Target Grade Matrix</h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
-            Compute the exact marks needed in end-semester written exams for your CGPA goal.
-          </p>
-        </div>
 
-        <div className="glass-card p-5 flex flex-col gap-3">
-          <div className="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center">
-            <Calendar className="h-5 w-5" />
+          <div className="glass-card p-6 flex flex-col items-center text-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+              <Award className="h-5 w-5" />
+            </div>
+            <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">Target Grade Matrix</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
+              Compute exact marks needed in end-semester exams for your CGPA goal.
+            </p>
           </div>
-          <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">Exams & Timetables</h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
-            Instant schedules, test portions, room numbers, and homework due dates.
-          </p>
-        </div>
 
-        <div className="glass-card p-5 flex flex-col gap-3">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-            <Bot className="h-5 w-5" />
+          <div className="glass-card p-6 flex flex-col items-center text-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center">
+              <Calendar className="h-5 w-5" />
+            </div>
+            <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">Exams & Timetables</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
+              Instant schedules, test portions, room numbers, and homework due dates.
+            </p>
           </div>
-          <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">Parent Safety Guard</h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
-            Empowers parents to monitor attendance alerts and fee balances for authorized children.
-          </p>
-        </div>
 
+          <div className="glass-card p-6 flex flex-col items-center text-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+              <Bot className="h-5 w-5" />
+            </div>
+            <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">Parent Safety Guard</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-normal">
+              Empowers parents to monitor attendance alerts and fee balances for authorized children.
+            </p>
+          </div>
+
+        </div>
       </section>
 
     </div>
