@@ -70,7 +70,7 @@ export default function Login({ onLoginSuccess }) {
           <Sparkles className="h-3.5 w-3.5" />
           <span>Role-Based Authorization Portal</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 dark:text-white">Sign In to CollegeAI</h2>
+        <h2 className="text-2xl sm:text-3xl font-display font-bold text-slate-900 dark:text-white">Sign In to EduMitra</h2>
         <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
           Select your role to access personalized companion dashboards.
         </p>

@@ -21,7 +21,7 @@ export default function ChatInterface({ currentUser, currentStudentId, presetQue
     {
       id: 'welcome',
       sender: 'bot',
-      text: `Hello ${currentUser.name}! I am your CollegeAI Personal Companion. I have secure access to your academic database records. Feel free to ask me anything.`,
+      text: `Hello ${currentUser.name}! I am your EduMitra Personal Companion. I have secure access to your academic database records. Feel free to ask me anything.`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       card: null
     }

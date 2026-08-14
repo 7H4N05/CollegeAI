@@ -1,6 +1,6 @@
-# 🚀 CollegeAI Demo Guide
+# 🚀 EduMitra Demo Guide
 
-Welcome to the CollegeAI Demo! This guide will walk you through the steps to set up and run the full stack application (Frontend + Backend) for your presentation or hackathon showcase.
+Welcome to the EduMitra Demo! This guide will walk you through the steps to set up and run the full stack application (Frontend + Backend) for your presentation or hackathon showcase.
 
 ---
 
