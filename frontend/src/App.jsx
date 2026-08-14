@@ -1,23 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from './components/Layout';
 import Landing from './components/Landing';
 import Login from './components/Login';
-import ChatInterface from './components/ChatInterface';
-import StudentDashboard from './components/StudentDashboard';
-import ParentDashboard from './components/ParentDashboard';
+import Dashboard from './components/Dashboard';
+import AttendanceView from './components/AttendanceView';
+import AcademicsView from './components/AcademicsView';
+import AssignmentsView from './components/AssignmentsView';
+import ExamsView from './components/ExamsView';
+import FeesView from './components/FeesView';
+import NoticesView from './components/NoticesView';
+import AiAssistantView from './components/AiAssistantView';
+import ProfileView from './components/ProfileView';
 import AdminDashboard from './components/AdminDashboard';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentStudentId, setCurrentStudentId] = useState(null);
-  const [currentView, setCurrentView] = useState('landing'); // landing, login, dashboard, chat, admin
+  const [currentView, setCurrentView] = useState('landing');
   const [chatPresetQuery, setChatPresetQuery] = useState(null);
+  const [theme, setTheme] = useState('light');
+
+  // Handle Theme Toggling
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
 
   const handleLoginSuccess = (user, studentId) => {
     setCurrentUser(user);
     setCurrentStudentId(studentId);
     if (user.role === 'ADMIN') {
-      setCurrentView('admin');
+      setCurrentView('admin-dashboard');
     } else {
       setCurrentView('dashboard');
     }
@@ -37,7 +53,7 @@ export default function App() {
 
   const handleAskChatShortcut = (queryText) => {
     setChatPresetQuery(queryText);
-    setCurrentView('chat');
+    setCurrentView('ai-assistant');
   };
 
   const handleClearPresetQuery = () => {
@@ -52,9 +68,9 @@ export default function App() {
       onLoginBypass={handleLoginBypass}
       currentView={currentView}
       setCurrentView={setCurrentView}
+      theme={theme}
+      setTheme={setTheme}
     >
-      
-      {/* Route Switcher */}
       <div className="flex-grow flex flex-col justify-start">
         
         {currentView === 'landing' && (
@@ -66,25 +82,53 @@ export default function App() {
         )}
 
         {currentView === 'dashboard' && currentUser && (
-          <>
-            {currentUser.role === 'STUDENT' && (
-              <StudentDashboard 
-                currentStudentId={currentStudentId} 
-                onAskChatShortcut={handleAskChatShortcut} 
-              />
-            )}
-            {currentUser.role === 'PARENT' && (
-              <ParentDashboard 
-                currentUser={currentUser}
-                currentStudentId={currentStudentId} 
-                onAskChatShortcut={handleAskChatShortcut} 
-              />
-            )}
-          </>
+          <Dashboard 
+            currentUser={currentUser}
+            currentStudentId={currentStudentId} 
+            onAskChatShortcut={handleAskChatShortcut}
+            onNavigate={(view) => setCurrentView(view)}
+          />
         )}
 
-        {currentView === 'chat' && currentUser && (
-          <ChatInterface 
+        {currentView === 'attendance' && currentUser && (
+          <AttendanceView 
+            currentStudentId={currentStudentId} 
+            onAskChatShortcut={handleAskChatShortcut}
+          />
+        )}
+
+        {currentView === 'academics' && currentUser && (
+          <AcademicsView 
+            currentStudentId={currentStudentId} 
+            onAskChatShortcut={handleAskChatShortcut}
+          />
+        )}
+
+        {currentView === 'assignments' && currentUser && (
+          <AssignmentsView 
+            currentStudentId={currentStudentId} 
+          />
+        )}
+
+        {currentView === 'exams' && currentUser && (
+          <ExamsView 
+            currentStudentId={currentStudentId} 
+          />
+        )}
+
+        {currentView === 'fees' && currentUser && (
+          <FeesView 
+            currentStudentId={currentStudentId} 
+            onAskChatShortcut={handleAskChatShortcut}
+          />
+        )}
+
+        {currentView === 'notices' && currentUser && (
+          <NoticesView />
+        )}
+
+        {currentView === 'ai-assistant' && currentUser && (
+          <AiAssistantView 
             currentUser={currentUser} 
             currentStudentId={currentStudentId} 
             presetQuery={chatPresetQuery}
@@ -92,12 +136,18 @@ export default function App() {
           />
         )}
 
-        {currentView === 'admin' && currentUser && currentUser.role === 'ADMIN' && (
-          <AdminDashboard />
+        {currentView === 'profile' && currentUser && (
+          <ProfileView 
+            currentUser={currentUser} 
+            currentStudentId={currentStudentId}
+          />
+        )}
+
+        {(currentView === 'admin-dashboard' || currentView === 'admin-attendance' || currentView === 'admin-notices') && currentUser && currentUser.role === 'ADMIN' && (
+          <AdminDashboard initialTab={currentView} />
         )}
 
       </div>
-
     </Layout>
   );
 }

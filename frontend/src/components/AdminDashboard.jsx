@@ -1,28 +1,15 @@
-import React, { useState } from 'react';
-import { 
-  Shield, 
-  Database, 
-  User, 
-  BookOpen, 
-  Save, 
-  Megaphone, 
-  PlusCircle, 
-  AlertCircle, 
-  CheckCircle,
-  Percent,
-  Receipt,
-  Sparkles
-} from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Shield, Database, User, Save, Megaphone, PlusCircle, AlertCircle, CheckCircle, Percent, Receipt, Users } from 'lucide-react';
 import { api } from '../services/api';
 
-export default function AdminDashboard() {
+export default function AdminDashboard({ initialTab = 'admin-dashboard' }) {
   const mockStudents = api.getMockStudents();
   
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [selectedStudentId, setSelectedStudentId] = useState(mockStudents[0].id);
   const [selectedSubjectId, setSelectedSubjectId] = useState('SUB001');
   const [attended, setAttended] = useState('15');
   const [conducted, setConducted] = useState('20');
-  
   const [pendingFees, setPendingFees] = useState('0');
   
   const [ancTitle, setAncTitle] = useState('');
@@ -34,7 +21,11 @@ export default function AdminDashboard() {
 
   const activeStudent = mockStudents.find(s => s.id === selectedStudentId);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
+
+  useEffect(() => {
     if (activeStudent) {
       const record = activeStudent.attendance.subjects.find(r => r.subject_id === selectedSubjectId);
       if (record) {
@@ -94,7 +85,7 @@ export default function AdminDashboard() {
     const newAnc = api.dispatchMockAnnouncement(ancTitle, ancContent, ancCategory);
     if (newAnc) {
       setStatusType('success');
-      setStatusMessage(`Broadcast dispatched: "${ancTitle}" is now live!`);
+      setStatusMessage(`Broadcast dispatched: "${ancTitle}" is now live across student feeds!`);
       setAncTitle('');
       setAncContent('');
     } else {
@@ -104,59 +95,49 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="flex flex-col gap-8 animate-fade-in">
+    <div className="flex flex-col gap-6 animate-fade-in">
       
-      {/* Header Banner */}
-      <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
-        <div className="flex items-center gap-5">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-600 text-white flex items-center justify-center font-display font-extrabold text-xl shadow-lg shadow-purple-500/30">
-            <Shield className="h-7 w-7" />
+      {/* Admin Header */}
+      <div className="glass-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-display font-bold text-lg border border-purple-500/20">
+            <Shield className="h-6 w-6" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-2xl font-display font-extrabold text-white">
-                Admin Control Console
-              </h2>
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
-                FULL ACCESS
-              </span>
-            </div>
-            <p className="text-xs text-slate-400 font-medium mt-1">
-              Modify mock database records, update student attendance, alter fee balances, & broadcast notices.
+            <h2 className="text-xl font-display font-bold text-slate-900 dark:text-white">Admin Management Console</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              System Administrator portal for modifying student attendance, fees ledger, & broadcasting notices.
             </p>
           </div>
         </div>
       </div>
 
       {statusMessage && (
-        <div className={`p-4 rounded-2xl border text-xs font-semibold flex items-center gap-3 ${
-          statusType === 'success'
-            ? 'bg-emerald-950/60 border-emerald-500/30 text-emerald-300'
-            : 'bg-red-950/60 border-red-500/30 text-red-300'
+        <div className={`p-4 rounded-xl border text-xs font-semibold flex items-center gap-3 ${
+          statusType === 'success' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400'
         }`}>
-          {statusType === 'success' ? <CheckCircle className="h-5 w-5 flex-shrink-0" /> : <AlertCircle className="h-5 w-5 flex-shrink-0" />}
+          {statusType === 'success' ? <CheckCircle className="h-4 w-4 shrink-0" /> : <AlertCircle className="h-4 w-4 shrink-0" />}
           <span>{statusMessage}</span>
         </div>
       )}
 
-      {/* Editor Grid */}
+      {/* Editor Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Attendance Modifier */}
-        <div className="lg:col-span-6 glass-panel p-6 rounded-3xl border border-white/10 flex flex-col gap-5">
-          <div className="flex items-center gap-2 text-teal-400 border-b border-white/10 pb-3">
-            <Percent className="h-5 w-5" />
-            <h3 className="font-display font-bold text-base text-white">Modify Attendance Records</h3>
-          </div>
+        <div className="lg:col-span-6 glass-card p-6 flex flex-col gap-4">
+          <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
+            <Percent className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+            Modify Attendance Records
+          </h3>
 
-          <form onSubmit={handleUpdateAttendance} className="flex flex-col gap-4">
-            
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-300">Select Target Student:</label>
+          <form onSubmit={handleUpdateAttendance} className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1 text-xs">
+              <label className="font-bold text-slate-700 dark:text-slate-300">Select Student:</label>
               <select
                 value={selectedStudentId}
                 onChange={(e) => setSelectedStudentId(e.target.value)}
-                className="glass-input text-xs font-bold text-white bg-slate-900"
+                className="glass-input text-xs font-bold"
               >
                 {mockStudents.map((stu) => (
                   <option key={stu.id} value={stu.id}>
@@ -166,12 +147,12 @@ export default function AdminDashboard() {
               </select>
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-300">Select Subject Course:</label>
+            <div className="flex flex-col gap-1 text-xs">
+              <label className="font-bold text-slate-700 dark:text-slate-300">Select Subject Course:</label>
               <select
                 value={selectedSubjectId}
                 onChange={(e) => setSelectedSubjectId(e.target.value)}
-                className="glass-input text-xs font-bold text-white bg-slate-900"
+                className="glass-input text-xs font-bold"
               >
                 {activeStudent?.attendance.subjects.map((sub) => (
                   <option key={sub.subject_id} value={sub.subject_id}>
@@ -181,50 +162,49 @@ export default function AdminDashboard() {
               </select>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-slate-300">Attended Classes:</label>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1 text-xs">
+                <label className="font-bold text-slate-700 dark:text-slate-300">Attended:</label>
                 <input
                   type="number"
                   min="0"
                   value={attended}
                   onChange={(e) => setAttended(e.target.value)}
-                  className="glass-input text-sm text-center font-bold"
+                  className="glass-input text-xs font-bold text-center"
                 />
               </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-slate-300">Conducted Classes:</label>
+              <div className="flex flex-col gap-1 text-xs">
+                <label className="font-bold text-slate-700 dark:text-slate-300">Conducted:</label>
                 <input
                   type="number"
                   min="1"
                   value={conducted}
                   onChange={(e) => setConducted(e.target.value)}
-                  className="glass-input text-sm text-center font-bold"
+                  className="glass-input text-xs font-bold text-center"
                 />
               </div>
             </div>
 
-            <button type="submit" className="btn-primary py-3 text-xs font-bold mt-2">
-              <Save className="h-4 w-4" /> Commit Attendance Updates
+            <button type="submit" className="btn-primary py-2.5 text-xs font-bold mt-2">
+              <Save className="h-4 w-4" /> Save Attendance Changes
             </button>
           </form>
         </div>
 
-        {/* Fees Modifier */}
-        <div className="lg:col-span-6 glass-panel p-6 rounded-3xl border border-white/10 flex flex-col gap-5">
-          <div className="flex items-center gap-2 text-emerald-400 border-b border-white/10 pb-3">
-            <Receipt className="h-5 w-5" />
-            <h3 className="font-display font-bold text-base text-white">Modify Fees Ledger Balance</h3>
-          </div>
+        {/* Fees Ledger Modifier */}
+        <div className="lg:col-span-6 glass-card p-6 flex flex-col gap-4">
+          <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
+            <Receipt className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+            Modify Fee Ledger Dues
+          </h3>
 
-          <form onSubmit={handleUpdateFees} className="flex flex-col gap-4">
-            
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-300">Select Target Student:</label>
+          <form onSubmit={handleUpdateFees} className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1 text-xs">
+              <label className="font-bold text-slate-700 dark:text-slate-300">Select Student:</label>
               <select
                 value={selectedStudentId}
                 onChange={(e) => setSelectedStudentId(e.target.value)}
-                className="glass-input text-xs font-bold text-white bg-slate-900"
+                className="glass-input text-xs font-bold"
               >
                 {mockStudents.map((stu) => (
                   <option key={stu.id} value={stu.id}>
@@ -234,49 +214,49 @@ export default function AdminDashboard() {
               </select>
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-300">New Outstanding Pending Amount (₹):</label>
+            <div className="flex flex-col gap-1 text-xs">
+              <label className="font-bold text-slate-700 dark:text-slate-300">New Pending Amount (₹):</label>
               <input
                 type="number"
                 min="0"
                 value={pendingFees}
                 onChange={(e) => setPendingFees(e.target.value)}
-                className="glass-input text-sm font-bold text-white"
+                className="glass-input text-xs font-bold"
               />
             </div>
 
-            <button type="submit" className="btn-primary py-3 text-xs font-bold mt-2">
-              <Save className="h-4 w-4" /> Save Fee Balance Changes
+            <button type="submit" className="btn-primary py-2.5 text-xs font-bold mt-2">
+              <Save className="h-4 w-4" /> Update Fees Ledger
             </button>
           </form>
         </div>
 
-        {/* Announcement Broadcaster */}
-        <div className="lg:col-span-12 glass-panel p-6 rounded-3xl border border-white/10 flex flex-col gap-5">
-          <div className="flex items-center gap-2 text-indigo-400 border-b border-white/10 pb-3">
-            <Megaphone className="h-5 w-5" />
-            <h3 className="font-display font-bold text-base text-white">Broadcast Announcement to Notice Board</h3>
-          </div>
+        {/* Notice Broadcaster */}
+        <div className="lg:col-span-12 glass-card p-6 flex flex-col gap-4">
+          <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
+            <Megaphone className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+            Broadcast Notice to Campus Board
+          </h3>
 
-          <form onSubmit={handleDispatchAnnouncement} className="flex flex-col gap-4">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-              <div className="md:col-span-8 flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-slate-300">Announcement Title:</label>
+          <form onSubmit={handleDispatchAnnouncement} className="flex flex-col gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+              <div className="md:col-span-8 flex flex-col gap-1 text-xs">
+                <label className="font-bold text-slate-700 dark:text-slate-300">Notice Title:</label>
                 <input
                   type="text"
                   placeholder="e.g. Mid-Semester Exam Schedule Released"
                   value={ancTitle}
                   onChange={(e) => setAncTitle(e.target.value)}
-                  className="glass-input text-xs text-white"
+                  className="glass-input text-xs"
                 />
               </div>
 
-              <div className="md:col-span-4 flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-slate-300">Category Tag:</label>
+              <div className="md:col-span-4 flex flex-col gap-1 text-xs">
+                <label className="font-bold text-slate-700 dark:text-slate-300">Category Tag:</label>
                 <select
                   value={ancCategory}
                   onChange={(e) => setAncCategory(e.target.value)}
-                  className="glass-input text-xs font-bold text-white bg-slate-900"
+                  className="glass-input text-xs font-bold"
                 >
                   <option value="ACADEMIC">ACADEMIC</option>
                   <option value="EXAM">EXAM</option>
@@ -286,19 +266,19 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-300">Detailed Announcement Body:</label>
+            <div className="flex flex-col gap-1 text-xs">
+              <label className="font-bold text-slate-700 dark:text-slate-300">Notice Body Text:</label>
               <textarea
                 rows="3"
                 placeholder="Enter full notice body text to broadcast across student and parent feeds..."
                 value={ancContent}
                 onChange={(e) => setAncContent(e.target.value)}
-                className="glass-input text-xs text-white"
+                className="glass-input text-xs"
               ></textarea>
             </div>
 
-            <button type="submit" className="btn-primary py-3 text-xs font-bold w-fit">
-              <PlusCircle className="h-4 w-4" /> Broadcast Notice
+            <button type="submit" className="btn-primary py-2.5 text-xs font-bold w-fit">
+              <PlusCircle className="h-4 w-4" /> Dispatch Notice
             </button>
           </form>
         </div>

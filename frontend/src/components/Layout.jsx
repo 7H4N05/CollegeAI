@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   GraduationCap, 
-  MessageSquare, 
   LayoutDashboard, 
-  LogOut, 
-  Menu, 
-  X, 
-  Sliders, 
+  Percent, 
+  Award, 
+  CheckSquare, 
+  Calendar, 
+  CreditCard, 
+  Bell, 
+  Bot, 
   User, 
-  Users, 
   Shield, 
-  CornerDownRight 
+  LogOut, 
+  Sun, 
+  Moon, 
+  Search, 
+  Sliders, 
+  X, 
+  Menu, 
+  ChevronRight, 
+  Sparkles,
+  Users
 } from 'lucide-react';
 import { api } from '../services/api';
 
@@ -21,14 +31,18 @@ export default function Layout({
   onLogout, 
   onLoginBypass, 
   currentView, 
-  setCurrentView 
+  setCurrentView,
+  theme,
+  setTheme
 }) {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [demoConsoleOpen, setDemoConsoleOpen] = useState(false);
-  
-  // Get all mock students to show in the switcher
+  const [searchQuery, setSearchQuery] = useState('');
+
   const mockStudentsList = api.getMockStudents();
 
+  // Persona switching handler
   const handlePersonaSwitch = async (studentId, role) => {
     try {
       const student = mockStudentsList.find(s => s.id === studentId);
@@ -38,16 +52,13 @@ export default function Layout({
       if (role === 'PARENT') {
         const parent = api.getMockParents().find(p => p.student_id === studentId);
         username = parent ? parent.name : 'parent';
-      } else if (role === 'ADMIN') {
-        username = 'admin';
       }
 
       const session = await api.login(role, username, 'password', studentId);
       onLoginBypass(session.user, session.student_id);
       
-      // Auto-navigate to dashboard or chat
       if (role === 'ADMIN') {
-        setCurrentView('admin');
+        setCurrentView('admin-dashboard');
       } else {
         setCurrentView('dashboard');
       }
@@ -61,419 +72,354 @@ export default function Layout({
     try {
       const session = await api.login('ADMIN', 'admin', 'password');
       onLoginBypass(session.user, null);
-      setCurrentView('admin');
+      setCurrentView('admin-dashboard');
       setDemoConsoleOpen(false);
     } catch (err) {
       console.error("Failed to switch to Admin", err);
     }
   };
 
+  // Nav Items Configuration
+  const studentNavItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'attendance', label: 'Attendance', icon: Percent },
+    { id: 'academics', label: 'Academics', icon: Award },
+    { id: 'assignments', label: 'Assignments', icon: CheckSquare },
+    { id: 'exams', label: 'Exams', icon: Calendar },
+    { id: 'fees', label: 'Fees & Dues', icon: CreditCard },
+    { id: 'notices', label: 'Notices', icon: Bell },
+    { id: 'ai-assistant', label: 'AI Companion', icon: Bot, badge: 'AI' },
+    { id: 'profile', label: 'Profile', icon: User }
+  ];
+
+  const adminNavItems = [
+    { id: 'admin-dashboard', label: 'Admin Overview', icon: Shield },
+    { id: 'admin-attendance', label: 'Attendance Manager', icon: Percent },
+    { id: 'admin-notices', label: 'Broadcast Notices', icon: Bell }
+  ];
+
+  const navItems = currentUser?.role === 'ADMIN' ? adminNavItems : studentNavItems;
+
+  const getPageTitle = (view) => {
+    switch (view) {
+      case 'dashboard': return 'Dashboard Overview';
+      case 'attendance': return 'Attendance Records & Leave Solver';
+      case 'academics': return 'Academic Marks & Target CGPA';
+      case 'assignments': return 'Assignments & Submissions';
+      case 'exams': return 'Examination Timetable';
+      case 'fees': return 'Fee Statement & Receipts';
+      case 'notices': return 'Campus Announcements';
+      case 'ai-assistant': return 'CollegeAI Intelligent Companion';
+      case 'profile': return 'User Profile Details';
+      case 'admin-dashboard': return 'Admin Management Console';
+      case 'admin-attendance': return 'Modify Attendance Records';
+      case 'admin-notices': return 'Broadcast Campus Notice';
+      default: return 'CollegeAI';
+    }
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+    <div className="min-h-screen flex bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 transition-colors duration-300">
       
-      {/* Header */}
-      <header className="sticky top-0 z-50 glass-panel border-b border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          
-          {/* Logo */}
-          <div 
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => setCurrentView('landing')}
-          >
-            <div className="p-2 bg-teal-600 rounded-lg text-white">
-              <GraduationCap className="h-6 w-6" />
+      {/* LEFT NAVIGATION SIDEBAR (Desktop) */}
+      {currentUser && (
+        <aside 
+          className={`hidden md:flex flex-col glass-sidebar fixed top-0 bottom-0 left-0 z-40 transition-all duration-300 ${
+            sidebarOpen ? 'w-64' : 'w-20'
+          }`}
+        >
+          {/* Logo Section */}
+          <div className="h-16 px-5 flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80">
+            <div 
+              className="flex items-center gap-3 cursor-pointer overflow-hidden"
+              onClick={() => setCurrentView('dashboard')}
+            >
+              <div className="p-2 rounded-xl bg-indigo-600 text-white shadow-md shadow-indigo-500/20 shrink-0">
+                <GraduationCap className="h-5 w-5" />
+              </div>
+              {sidebarOpen && (
+                <div className="flex flex-col">
+                  <span className="font-display font-bold text-base tracking-tight text-slate-900 dark:text-white leading-none">
+                    College<span className="text-indigo-600 dark:text-indigo-400">AI</span>
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-medium mt-0.5">Academic Companion</span>
+                </div>
+              )}
             </div>
-            <div>
-              <span className="font-display font-extrabold text-xl tracking-tight text-slate-900 dark:text-white">
-                College<span className="text-teal-600 dark:text-teal-400">AI</span>
-              </span>
-              <span className="ml-1.5 px-1.5 py-0.5 text-[10px] font-bold bg-amber-500/10 text-amber-600 rounded-md border border-amber-500/20">
-                PROTOTYPE
-              </span>
-            </div>
+
+            <button 
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            >
+              <ChevronRight className={`h-4 w-4 transition-transform duration-300 ${sidebarOpen ? 'rotate-180' : ''}`} />
+            </button>
           </div>
 
-          {/* Desktop Navigation */}
-          {currentUser && (
-            <nav className="hidden md:flex items-center gap-6">
-              {currentUser.role !== 'ADMIN' && (
-                <>
-                  <button
-                    onClick={() => setCurrentView('dashboard')}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-md font-medium text-sm transition-all ${
-                      currentView === 'dashboard'
-                        ? 'text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/30'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-                    }`}
-                  >
-                    <LayoutDashboard className="h-4 w-4" />
-                    Dashboard
-                  </button>
-                  <button
-                    onClick={() => setCurrentView('chat')}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-md font-medium text-sm transition-all ${
-                      currentView === 'chat'
-                        ? 'text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/30'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-                    }`}
-                  >
-                    <MessageSquare className="h-4 w-4" />
-                    Chat with AI
-                  </button>
-                </>
-              )}
-              {currentUser.role === 'ADMIN' && (
+          {/* Navigation Links */}
+          <nav className="flex-grow p-3 flex flex-col gap-1 overflow-y-auto">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentView === item.id;
+              return (
                 <button
-                  onClick={() => setCurrentView('admin')}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-md font-medium text-sm transition-all ${
-                    currentView === 'admin'
-                      ? 'text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/30'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  key={item.id}
+                  onClick={() => setCurrentView(item.id)}
+                  title={!sidebarOpen ? item.label : undefined}
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-display text-xs font-semibold transition-all duration-200 group relative ${
+                    isActive
+                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/50'
                   }`}
                 >
-                  <Shield className="h-4 w-4" />
-                  Admin Console
+                  <Icon className={`h-4 w-4 shrink-0 transition-transform ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
+                  {sidebarOpen && <span>{item.label}</span>}
+                  
+                  {item.badge && sidebarOpen && (
+                    <span className={`ml-auto text-[9px] font-extrabold px-1.5 py-0.5 rounded-full ${
+                      isActive ? 'bg-white/20 text-white' : 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400'
+                    }`}>
+                      {item.badge}
+                    </span>
+                  )}
                 </button>
-              )}
-            </nav>
-          )}
+              );
+            })}
+          </nav>
 
-          {/* Right: Auth Profile Section */}
-          <div className="hidden md:flex items-center gap-4">
-            {currentUser ? (
-              <div className="flex items-center gap-3 border-l border-slate-200 dark:border-slate-800 pl-4">
-                <div className="text-right">
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white leading-tight">
-                    {currentUser.name}
-                  </p>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                    {currentUser.role} {currentStudentId && `• ID: ${currentStudentId}`}
-                  </p>
+          {/* Sidebar Footer User Info */}
+          <div className="p-3 border-t border-slate-200/80 dark:border-slate-800/80">
+            <div className={`p-2 rounded-xl flex items-center justify-between ${sidebarOpen ? 'bg-slate-100/60 dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50' : ''}`}>
+              <div className="flex items-center gap-2.5 overflow-hidden">
+                <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                  {currentUser.name[0]}
                 </div>
+                {sidebarOpen && (
+                  <div className="flex flex-col overflow-hidden">
+                    <span className="text-xs font-bold text-slate-900 dark:text-white truncate">{currentUser.name}</span>
+                    <span className="text-[10px] text-slate-400 font-medium">{currentUser.role} {currentStudentId && `• ${currentStudentId}`}</span>
+                  </div>
+                )}
+              </div>
+
+              {sidebarOpen && (
                 <button
                   onClick={onLogout}
-                  className="p-2 text-slate-400 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                  title="Logout"
+                  className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                  title="Sign Out"
                 >
-                  <LogOut className="h-5 w-5" />
+                  <LogOut className="h-4 w-4" />
                 </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setCurrentView('login')}
-                className="btn-primary text-sm px-4 py-2"
-              >
-                Sign In
-              </button>
-            )}
+              )}
+            </div>
           </div>
+        </aside>
+      )}
 
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2">
+      {/* MAIN CONTAINER */}
+      <div className={`flex-grow flex flex-col min-w-0 transition-all duration-300 ${
+        currentUser ? (sidebarOpen ? 'md:ml-64' : 'md:ml-20') : ''
+      }`}>
+        
+        {/* TOP HEADER */}
+        <header className="sticky top-0 z-30 glass-header h-16 px-4 sm:px-6 flex items-center justify-between gap-4">
+          
+          <div className="flex items-center gap-3">
             {currentUser && (
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+                className="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
               >
-                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                <Menu className="h-5 w-5" />
               </button>
             )}
+
+            {!currentUser && (
+              <div 
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => setCurrentView('landing')}
+              >
+                <div className="p-1.5 rounded-lg bg-indigo-600 text-white">
+                  <GraduationCap className="h-5 w-5" />
+                </div>
+                <span className="font-display font-bold text-lg text-slate-900 dark:text-white">
+                  College<span className="text-indigo-600 dark:text-indigo-400">AI</span>
+                </span>
+              </div>
+            )}
+
+            {currentUser && (
+              <div className="flex flex-col">
+                <h1 className="font-display font-bold text-sm sm:text-base text-slate-900 dark:text-white leading-none">
+                  {getPageTitle(currentView)}
+                </h1>
+                <span className="text-[11px] text-slate-400 font-medium hidden sm:inline-block mt-0.5">
+                  Personalized Academic Companion
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Header Action Buttons */}
+          <div className="flex items-center gap-3">
+            
+            {/* Global Search Input */}
+            {currentUser && (
+              <div className="relative hidden lg:flex items-center w-56">
+                <input
+                  type="text"
+                  placeholder="Quick search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full glass-input text-xs py-1.5 pl-8 pr-3 text-slate-800 dark:text-slate-200"
+                />
+                <Search className="h-3.5 w-3.5 text-slate-400 absolute left-2.5" />
+              </div>
+            )}
+
+            {/* Theme Toggle Button */}
+            <button
+              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+              className="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+            >
+              {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+            </button>
+
+            {/* Persona Switcher Quick Pill */}
+            {currentUser && (
+              <button
+                onClick={() => setDemoConsoleOpen(true)}
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 transition-all"
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                <span>Persona: {currentUser.name.split(' ')[0]}</span>
+              </button>
+            )}
+
             {!currentUser && (
               <button
                 onClick={() => setCurrentView('login')}
-                className="btn-primary text-xs px-3 py-1.5"
+                className="btn-primary text-xs px-4 py-2"
               >
                 Sign In
               </button>
             )}
-          </div>
-        </div>
 
-        {/* Mobile Navigation Drawer */}
+          </div>
+        </header>
+
+        {/* MOBILE NAVIGATION DRAWER */}
         {mobileMenuOpen && currentUser && (
-          <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 flex flex-col gap-2">
-            {currentUser.role !== 'ADMIN' && (
-              <>
+          <div className="md:hidden glass-header border-b border-slate-200 dark:border-slate-800 p-4 flex flex-col gap-1 animate-fade-in">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentView === item.id;
+              return (
                 <button
-                  onClick={() => { setCurrentView('dashboard'); setMobileMenuOpen(false); }}
-                  className="flex items-center gap-2 px-3 py-2 rounded-md font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 text-left"
+                  key={item.id}
+                  onClick={() => { setCurrentView(item.id); setMobileMenuOpen(false); }}
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-display text-xs font-semibold ${
+                    isActive ? 'bg-indigo-600 text-white' : 'text-slate-600 dark:text-slate-300'
+                  }`}
                 >
-                  <LayoutDashboard className="h-5 w-5 text-slate-500" />
-                  Dashboard
+                  <Icon className="h-4 w-4" />
+                  <span>{item.label}</span>
                 </button>
-                <button
-                  onClick={() => { setCurrentView('chat'); setMobileMenuOpen(false); }}
-                  className="flex items-center gap-2 px-3 py-2 rounded-md font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 text-left"
-                >
-                  <MessageSquare className="h-5 w-5 text-slate-500" />
-                  Chat with AI
-                </button>
-              </>
-            )}
-            {currentUser.role === 'ADMIN' && (
-              <button
-                onClick={() => { setCurrentView('admin'); setMobileMenuOpen(false); }}
-                className="flex items-center gap-2 px-3 py-2 rounded-md font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 text-left"
-              >
-                <Shield className="h-5 w-5 text-slate-500" />
-                Admin Console
-              </button>
-            )}
-            <div className="border-t border-slate-100 dark:border-slate-800 pt-3 mt-1 flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold text-slate-900 dark:text-white">{currentUser.name}</p>
-                <p className="text-xs text-slate-500">{currentUser.role}</p>
-              </div>
-              <button
-                onClick={() => { onLogout(); setMobileMenuOpen(false); }}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-md text-red-500 font-semibold hover:bg-red-50 dark:hover:bg-red-950/20"
-              >
-                <LogOut className="h-4 w-4" />
-                Logout
-              </button>
+              );
+            })}
+            <div className="border-t border-slate-200 dark:border-slate-800 pt-3 mt-2 flex items-center justify-between">
+              <span className="text-xs font-bold">{currentUser.name} ({currentUser.role})</span>
+              <button onClick={onLogout} className="text-xs font-bold text-red-500">Sign Out</button>
             </div>
           </div>
         )}
-      </header>
 
-      {/* Main Content */}
-      <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col">
-        {children}
-      </main>
+        {/* MAIN BODY CONTENT */}
+        <main className="flex-grow p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto flex flex-col">
+          {children}
+        </main>
 
-      {/* Footer */}
-      <footer className="bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 py-6 text-center text-slate-500 dark:text-slate-400 text-xs mt-auto">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© 2026 CollegeAI Hackathon Prototype. Developed by Team Member 2.</p>
-          <div className="flex gap-4">
-            <span className="px-2 py-1 bg-teal-50 dark:bg-teal-950 text-teal-600 dark:text-teal-400 font-bold rounded border border-teal-500/10">
+        {/* FOOTER */}
+        <footer className="px-6 py-4 border-t border-slate-200/80 dark:border-slate-800/80 text-center text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-2">
+          <span>© 2026 CollegeAI Hackathon Prototype. Developed by Team Member 2.</span>
+          <div className="flex items-center gap-3">
+            <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-[10px] font-bold border border-emerald-500/20">
               Mock Mode: Active
             </span>
-            <span className="px-2 py-1 bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-bold rounded border border-indigo-500/10">
-              Future WhatsApp Hook Ready
+            <span className="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-mono text-[10px] font-bold border border-indigo-500/20">
+              WhatsApp API Engine Ready
             </span>
           </div>
-        </div>
-      </footer>
+        </footer>
 
-      {/* Floating Demo Console (Personas Switcher) */}
-      <div className="demo-floating-console">
+      </div>
+
+      {/* FLOATING DEMO CONSOLE (Persona Switcher) */}
+      <div className="demo-console-fab">
         {!demoConsoleOpen ? (
           <button
             onClick={() => setDemoConsoleOpen(true)}
-            className="flex items-center gap-2 bg-gradient-to-r from-teal-600 to-emerald-600 text-white px-4 py-2.5 rounded-lg shadow-lg font-display text-sm font-semibold hover:brightness-110 transition-all border border-teal-500"
+            className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-4 py-2.5 rounded-full shadow-xl font-display text-xs font-bold hover:scale-105 transition-all border border-indigo-400/30"
           >
             <Sliders className="h-4 w-4" />
             <span>Demo Console</span>
           </button>
         ) : (
-          <div className="glass-panel w-80 bg-white dark:bg-slate-900 border border-teal-500/30 rounded-xl overflow-hidden shadow-2xl flex flex-col animate-fade-in max-h-[85vh]">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-teal-600 to-indigo-700 p-3 text-white flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <Sliders className="h-4.5 w-4.5" />
-                <span className="font-display font-bold text-sm">CollegeAI Demo Panel</span>
+          <div className="glass-card w-80 p-4 border border-indigo-500/30 shadow-2xl flex flex-col gap-4 animate-fade-in max-h-[85vh] overflow-hidden">
+            <div className="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
+              <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+                <Sliders className="h-4 w-4" />
+                <span className="font-display font-bold text-xs text-slate-900 dark:text-white">Demo Persona Switcher</span>
               </div>
               <button 
                 onClick={() => setDemoConsoleOpen(false)}
-                className="text-white/80 hover:text-white p-1 rounded"
+                className="p-1 rounded text-slate-400 hover:text-slate-700 dark:hover:text-white"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
-            
-            {/* Body */}
-            <div className="p-4 flex flex-col gap-3.5 overflow-y-auto">
-              <div>
-                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-                  System Roles
-                </p>
-                <button
-                  onClick={handleAdminSwitch}
-                  className="w-full flex items-center justify-between text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 p-2 rounded-lg border border-indigo-200 dark:border-indigo-900 hover:brightness-105 transition-all"
-                >
-                  <span className="flex items-center gap-1"><Shield className="h-3.5 w-3.5" /> Login as Admin</span>
-                  <span>Manage Data</span>
-                </button>
-              </div>
 
-              <div>
-                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-                  Student/Parent Personas
-                </p>
-                <div className="flex flex-col gap-2 max-h-[40vh] overflow-y-auto pr-1">
-                  
-                  {/* Persona 1: Aarav Sharma */}
-                  <div className="border border-slate-200 dark:border-slate-800 rounded-lg p-2.5 hover:border-teal-500/50 transition-colors">
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-xs font-bold text-slate-900 dark:text-white">Aarav Sharma</span>
-                      <span className="text-[9px] px-1.5 py-0.5 rounded font-extrabold bg-green-500/10 text-green-500">
-                        88% Attendance
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight mb-2">
-                      Perfect student. Dues cleared. No critical warnings.
-                    </p>
-                    <div className="flex gap-2">
-                      <button 
-                        onClick={() => handlePersonaSwitch('STU001', 'STUDENT')}
-                        className="flex-1 flex items-center justify-center gap-0.5 text-[10px] font-bold bg-teal-500/10 text-teal-600 dark:text-teal-400 hover:bg-teal-500/25 p-1 rounded transition-colors"
-                      >
-                        <User className="h-2.5 w-2.5" /> Student
-                      </button>
-                      <button 
-                        onClick={() => handlePersonaSwitch('STU001', 'PARENT')}
-                        className="flex-1 flex items-center justify-center gap-0.5 text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500/25 p-1 rounded transition-colors"
-                      >
-                        <Users className="h-2.5 w-2.5" /> Parent
-                      </button>
-                    </div>
+            <div className="flex flex-col gap-2 overflow-y-auto max-h-[60vh] pr-1">
+              <button
+                onClick={handleAdminSwitch}
+                className="w-full flex items-center justify-between text-xs font-bold text-purple-600 dark:text-purple-400 bg-purple-500/10 p-2.5 rounded-xl border border-purple-500/20 hover:bg-purple-500/20 transition-all"
+              >
+                <span className="flex items-center gap-1.5"><Shield className="h-4 w-4" /> System Administrator</span>
+                <span className="text-[10px]">Admin</span>
+              </button>
+
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1">Student & Parent Personas</span>
+
+              {[
+                { id: 'STU001', name: 'Aarav Sharma', att: '88%', status: 'Safe', color: 'text-emerald-500', desc: 'High attendance, fees paid' },
+                { id: 'STU002', name: 'Sneha Patel', att: '76%', status: 'Borderline', color: 'text-amber-500', desc: '1 assignment pending' },
+                { id: 'STU003', name: 'Rohan Das', att: '68%', status: 'Warning', color: 'text-red-500', desc: 'Low att., ₹25k pending fee' },
+                { id: 'STU004', name: 'Priya Nair', att: '82%', status: 'Safe', color: 'text-emerald-500', desc: 'High GPA, ₹15k fee due' },
+                { id: 'STU005', name: 'Aditya Verma', att: '80%', status: 'Safe', color: 'text-emerald-500', desc: '2 upcoming exams' },
+                { id: 'STU006', name: 'Ananya Iyer', att: '74%', status: 'Warning', color: 'text-red-500', desc: 'Below 75% threshold' }
+              ].map((p) => (
+                <div key={p.id} className="p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between text-xs font-bold">
+                    <span className="text-slate-900 dark:text-white">{p.name}</span>
+                    <span className={`text-[10px] ${p.color}`}>{p.att} ({p.status})</span>
                   </div>
-
-                  {/* Persona 2: Sneha Patel */}
-                  <div className="border border-slate-200 dark:border-slate-800 rounded-lg p-2.5 hover:border-teal-500/50 transition-colors">
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-xs font-bold text-slate-900 dark:text-white">Sneha Patel</span>
-                      <span className="text-[9px] px-1.5 py-0.5 rounded font-extrabold bg-amber-500/10 text-amber-500">
-                        76% Attendance
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight mb-2">
-                      Borderline student. 1 pending assignment.
-                    </p>
-                    <div className="flex gap-2">
-                      <button 
-                        onClick={() => handlePersonaSwitch('STU002', 'STUDENT')}
-                        className="flex-1 flex items-center justify-center gap-0.5 text-[10px] font-bold bg-teal-500/10 text-teal-600 dark:text-teal-400 hover:bg-teal-500/25 p-1 rounded transition-colors"
-                      >
-                        <User className="h-2.5 w-2.5" /> Student
-                      </button>
-                      <button 
-                        onClick={() => handlePersonaSwitch('STU002', 'PARENT')}
-                        className="flex-1 flex items-center justify-center gap-0.5 text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500/25 p-1 rounded transition-colors"
-                      >
-                        <Users className="h-2.5 w-2.5" /> Parent
-                      </button>
-                    </div>
+                  <p className="text-[10px] text-slate-400">{p.desc}</p>
+                  <div className="flex gap-2 mt-0.5">
+                    <button
+                      onClick={() => handlePersonaSwitch(p.id, 'STUDENT')}
+                      className="flex-1 py-1 rounded-lg text-[10px] font-bold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/20 transition-all flex items-center justify-center gap-1"
+                    >
+                      <User className="h-3 w-3" /> Student
+                    </button>
+                    <button
+                      onClick={() => handlePersonaSwitch(p.id, 'PARENT')}
+                      className="flex-1 py-1 rounded-lg text-[10px] font-bold bg-purple-500/10 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 transition-all flex items-center justify-center gap-1"
+                    >
+                      <Users className="h-3 w-3" /> Parent
+                    </button>
                   </div>
-
-                  {/* Persona 3: Rohan Das */}
-                  <div className="border border-slate-200 dark:border-slate-800 rounded-lg p-2.5 hover:border-teal-500/50 transition-colors">
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-xs font-bold text-slate-900 dark:text-white">Rohan Das</span>
-                      <span className="text-[9px] px-1.5 py-0.5 rounded font-extrabold bg-red-500/10 text-red-500">
-                        68% Attendance
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight mb-2">
-                      Critical low attendance. ₹25,000 pending fee.
-                    </p>
-                    <div className="flex gap-2">
-                      <button 
-                        onClick={() => handlePersonaSwitch('STU003', 'STUDENT')}
-                        className="flex-1 flex items-center justify-center gap-0.5 text-[10px] font-bold bg-teal-500/10 text-teal-600 dark:text-teal-400 hover:bg-teal-500/25 p-1 rounded transition-colors"
-                      >
-                        <User className="h-2.5 w-2.5" /> Student
-                      </button>
-                      <button 
-                        onClick={() => handlePersonaSwitch('STU003', 'PARENT')}
-                        className="flex-1 flex items-center justify-center gap-0.5 text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500/25 p-1 rounded transition-colors"
-                      >
-                        <Users className="h-2.5 w-2.5" /> Parent
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Persona 4: Priya Nair */}
-                  <div className="border border-slate-200 dark:border-slate-800 rounded-lg p-2.5 hover:border-teal-500/50 transition-colors">
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-xs font-bold text-slate-900 dark:text-white">Priya Nair</span>
-                      <span className="text-[9px] px-1.5 py-0.5 rounded font-extrabold bg-teal-500/10 text-teal-500">
-                        82% Attendance
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight mb-2">
-                      High GPA. ₹15,000 pending fee past due date.
-                    </p>
-                    <div className="flex gap-2">
-                      <button 
-                        onClick={() => handlePersonaSwitch('STU004', 'STUDENT')}
-                        className="flex-1 flex items-center justify-center gap-0.5 text-[10px] font-bold bg-teal-500/10 text-teal-600 dark:text-teal-400 hover:bg-teal-500/25 p-1 rounded transition-colors"
-                      >
-                        <User className="h-2.5 w-2.5" /> Student
-                      </button>
-                      <button 
-                        onClick={() => handlePersonaSwitch('STU004', 'PARENT')}
-                        className="flex-1 flex items-center justify-center gap-0.5 text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500/25 p-1 rounded transition-colors"
-                      >
-                        <Users className="h-2.5 w-2.5" /> Parent
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Persona 5: Aditya Verma */}
-                  <div className="border border-slate-200 dark:border-slate-800 rounded-lg p-2.5 hover:border-teal-500/50 transition-colors">
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-xs font-bold text-slate-900 dark:text-white">Aditya Verma</span>
-                      <span className="text-[9px] px-1.5 py-0.5 rounded font-extrabold bg-teal-500/10 text-teal-500">
-                        80% Attendance
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight mb-2">
-                      Has 2 upcoming exams next week.
-                    </p>
-                    <div className="flex gap-2">
-                      <button 
-                        onClick={() => handlePersonaSwitch('STU005', 'STUDENT')}
-                        className="flex-1 flex items-center justify-center gap-0.5 text-[10px] font-bold bg-teal-500/10 text-teal-600 dark:text-teal-400 hover:bg-teal-500/25 p-1 rounded transition-colors"
-                      >
-                        <User className="h-2.5 w-2.5" /> Student
-                      </button>
-                      <button 
-                        onClick={() => handlePersonaSwitch('STU005', 'PARENT')}
-                        className="flex-1 flex items-center justify-center gap-0.5 text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500/25 p-1 rounded transition-colors"
-                      >
-                        <Users className="h-2.5 w-2.5" /> Parent
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Persona 6: Ananya Iyer */}
-                  <div className="border border-slate-200 dark:border-slate-800 rounded-lg p-2.5 hover:border-teal-500/50 transition-colors">
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-xs font-bold text-slate-900 dark:text-white">Ananya Iyer</span>
-                      <span className="text-[9px] px-1.5 py-0.5 rounded font-extrabold bg-red-500/10 text-red-500">
-                        74% Attendance
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight mb-2">
-                      Just below 75% threshold. High GPA.
-                    </p>
-                    <div className="flex gap-2">
-                      <button 
-                        onClick={() => handlePersonaSwitch('STU006', 'STUDENT')}
-                        className="flex-1 flex items-center justify-center gap-0.5 text-[10px] font-bold bg-teal-500/10 text-teal-600 dark:text-teal-400 hover:bg-teal-500/25 p-1 rounded transition-colors"
-                      >
-                        <User className="h-2.5 w-2.5" /> Student
-                      </button>
-                      <button 
-                        onClick={() => handlePersonaSwitch('STU006', 'PARENT')}
-                        className="flex-1 flex items-center justify-center gap-0.5 text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500/25 p-1 rounded transition-colors"
-                      >
-                        <Users className="h-2.5 w-2.5" /> Parent
-                      </button>
-                    </div>
-                  </div>
-
                 </div>
-              </div>
-            </div>
-            
-            {/* Footer */}
-            <div className="bg-slate-50 dark:bg-slate-950 p-2.5 text-center border-t border-slate-100 dark:border-slate-850">
-              <span className="text-[9px] font-semibold text-slate-400">
-                Click any persona to log in instantly & populate dashboard/chat data.
-              </span>
+              ))}
             </div>
           </div>
         )}
