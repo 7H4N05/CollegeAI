@@ -1394,8 +1394,8 @@ export const api = {
       await new Promise(resolve => setTimeout(resolve, 800));
       const text = message || (role === 'PARENT' ? "How is my child's attendance?" : "What is my current attendance?");
       const header = isVoiceNote 
-        ? `🎙️ *Voice Note Transcribed:* "${text}"\n\n🤖 *CollegeAI WhatsApp Assistant:*\n`
-        : `🤖 *CollegeAI WhatsApp Assistant:*\n`;
+        ? `🎙️ *Voice Note Transcribed:* "${text}"\n\n🤖 *EduMitra WhatsApp Assistant:*\n`
+        : `🤖 *EduMitra WhatsApp Assistant:*\n`;
       return {
         reply: `${header}Attendance record for ${studentId}: 88.0% (SAFE).\n• Max missable classes: 34\n• All subjects above 75% threshold.`
       };

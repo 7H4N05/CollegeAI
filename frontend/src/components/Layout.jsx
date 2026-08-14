@@ -79,7 +79,7 @@ export default function Layout({
           </div>
           <div className="flex items-center gap-2">
             <span className="font-display font-extrabold text-xl text-white leading-none">
-              College<span className="text-indigo-400">AI</span>
+              Edu<span className="text-indigo-400">Mitra</span>
             </span>
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 font-mono text-[10px] font-bold border border-indigo-500/20">
@@ -159,7 +159,7 @@ export default function Layout({
 
       {/* MINIMAL FOOTER */}
       <footer className="w-full px-6 py-3 border-t border-slate-800/80 text-center text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-2 max-w-6xl mx-auto">
-        <span>© 2026 CollegeAI Assistant • Fetching ERP Data on Demand</span>
+        <span>© 2026 EduMitra Assistant • Fetching ERP Data on Demand</span>
         <div className="flex items-center gap-2">
           <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-mono text-[10px] font-bold border border-emerald-500/20 flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> ERP Sync Ready

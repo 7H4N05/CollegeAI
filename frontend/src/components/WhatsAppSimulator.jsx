@@ -13,7 +13,7 @@ export default function WhatsAppSimulator({ currentUser, currentStudentId }) {
     {
       id: 'welcome',
       sender: 'bot',
-      text: `🤖 *CollegeAI WhatsApp Assistant*\n\nHello ${currentUser?.name || 'User'}! Welcome to the CollegeAI WhatsApp Companion service.\n\nYou can send me text messages or *WhatsApp Voice Notes* to check attendance, exam schedules, fee dues, or calculate leave impact.`,
+      text: `🤖 *EduMitra WhatsApp Assistant*\n\nHello ${currentUser?.name || 'User'}! Welcome to the EduMitra WhatsApp service.\n\nYou can send me text messages or *WhatsApp Voice Notes* to check attendance, exam schedules, fee dues, or calculate leave impact.`,
       timestamp: '10:15 AM'
     }
   ]);
@@ -218,11 +218,11 @@ export default function WhatsAppSimulator({ currentUser, currentStudentId }) {
             <div className="bg-[#075e54] text-white px-4 py-3 flex items-center justify-between shadow-md shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-emerald-400 text-slate-900 flex items-center justify-center font-bold text-sm shadow">
-                  CA
+                  EM
                 </div>
                 <div>
                   <h3 className="font-bold text-sm leading-tight flex items-center gap-1.5">
-                    CollegeAI Assistant
+                    EduMitra Assistant
                     <span className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span>
                   </h3>
                   <span className="text-[10px] text-emerald-100 font-medium">Business Account • online</span>
