@@ -51,6 +51,7 @@ def get_timetable(
     return get_student_timetable_data(student_id, day)
 
 @router.get("/{student_id}/examinations", response_model=List[Examination])
+@router.get("/{student_id}/exams", response_model=List[Examination])
 def get_examinations(
     student_id: str,
     user: dict = Depends(get_current_user_from_header)

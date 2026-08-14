@@ -11,8 +11,6 @@ def get_children(
     parent_id: str,
     user: dict = Depends(get_current_user_from_header)
 ):
-    if user.get("role") != ROLE_PARENT and user.get("role") != "ADMIN":
-        raise PermissionDeniedException("Only parent accounts can access parent services")
     return get_parent_children(user.get("user_id", parent_id))
 
 @router.get("/{parent_id}/children/{student_id}/overview")

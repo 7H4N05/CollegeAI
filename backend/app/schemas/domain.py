@@ -5,6 +5,8 @@ from typing import List, Optional, Dict, Any
 class LoginRequest(BaseModel):
     username: str
     password: str
+    role: Optional[str] = None
+    student_id: Optional[str] = None
 
 class TokenResponse(BaseModel):
     access_token: str

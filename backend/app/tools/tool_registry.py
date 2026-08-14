@@ -203,6 +203,13 @@ def execute_tool(tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
             res = get_student_fees_data(arguments["student_id"])
             return res.model_dump()
             
+        elif tool_name == "find_optimal_leave_period":
+            from app.services.attendance_engine import find_optimal_leave_period
+            return find_optimal_leave_period(
+                arguments["student_id"],
+                arguments.get("num_days", 5)
+            )
+            
         elif tool_name == "get_announcements":
             res = get_announcements_data(arguments.get("target_role", "ALL"))
             return [a.model_dump() for a in res]

@@ -198,3 +198,64 @@ def calculate_leave_impact_for_dates(student_id: str, start_date_str: str, end_d
         subject_details=subject_details,
         recommendation=recommendation
     )
+
+def find_optimal_leave_period(student_id: str, num_days: int = 5) -> Dict[str, Any]:
+    """
+    Evaluates timetable across the next 21 days to find the single BEST window
+    of num_days duration that minimizes missed periods and maximizes projected attendance.
+    """
+    best_res = None
+    best_pct = -1.0
+    best_classes = 9999
+    
+    worst_res = None
+    worst_pct = 101.0
+
+    today = datetime.now()
+    
+    # Evaluate starting windows for next 21 days
+    for start_offset in range(1, 22):
+        start_dt = today + timedelta(days=start_offset)
+        end_dt = start_dt + timedelta(days=num_days - 1)
+        
+        start_str = start_dt.strftime("%Y-%m-%d")
+        end_str = end_dt.strftime("%Y-%m-%d")
+        
+        res = calculate_leave_impact_for_dates(student_id, start_str, end_str)
+        proj_pct = res.projected_overall_percentage
+        classes_missed = res.total_classes_affected
+        
+        # Best criteria: highest projected percentage, fewer missed classes
+        if proj_pct > best_pct or (proj_pct == best_pct and classes_missed < best_classes):
+            best_pct = proj_pct
+            best_classes = classes_missed
+            best_res = {
+                "start_date": start_str,
+                "end_date": end_str,
+                "start_day_name": start_dt.strftime("%A"),
+                "end_day_name": end_dt.strftime("%A"),
+                "projected_percentage": proj_pct,
+                "classes_affected": classes_missed,
+                "dropping_subjects": res.subjects_dropping_below_75
+            }
+            
+        # Worst criteria: lowest projected percentage
+        if proj_pct < worst_pct:
+            worst_pct = proj_pct
+            worst_res = {
+                "start_date": start_str,
+                "end_date": end_str,
+                "start_day_name": start_dt.strftime("%A"),
+                "end_day_name": end_dt.strftime("%A"),
+                "projected_percentage": proj_pct,
+                "classes_affected": classes_missed,
+                "dropping_subjects": res.subjects_dropping_below_75
+            }
+            
+    return {
+        "student_id": student_id,
+        "num_days": num_days,
+        "best_window": best_res,
+        "worst_window": worst_res
+    }
+

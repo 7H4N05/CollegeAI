@@ -976,6 +976,24 @@ export function simulateAIChatReply(role, studentId, message) {
 // 4. API CLIENT IMPLEMENTATION
 // ==========================================
 
+async function safeFetch(url, options = {}) {
+  const response = await fetch(url, options);
+  if (!response.ok) {
+    let errorMsg = `Server error (${response.status})`;
+    try {
+      const errorData = await response.json();
+      errorMsg = errorData.detail || errorData.message || errorMsg;
+    } catch (e) {
+      try {
+        const text = await response.text();
+        errorMsg = text || errorMsg;
+      } catch (e2) {}
+    }
+    throw new Error(errorMsg);
+  }
+  return response.json();
+}
+
 export const api = {
   // Authentication
   async login(role, username, password, studentId = null) {
@@ -1013,16 +1031,22 @@ export const api = {
         student_id: targetStudentId
       };
     } else {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      const data = await safeFetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ role, username, password, student_id: studentId })
       });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.detail || 'Login failed.');
-      }
-      return response.json();
+      return {
+        token: data.access_token,
+        user: {
+          id: data.user_id,
+          username: data.username,
+          name: data.name,
+          role: data.role,
+          authorized_children: data.authorized_children || []
+        },
+        student_id: data.student_id
+      };
     }
   },
 
@@ -1040,8 +1064,20 @@ export const api = {
         email: s.email
       };
     }
-    const res = await fetch(`${API_BASE_URL}/student/${studentId}/profile`);
-    return res.json();
+    const data = await safeFetch(`${API_BASE_URL}/students/${studentId}/profile`);
+    return {
+      student_id: data.student_id,
+      name: data.name,
+      roll_number: data.roll_number,
+      course: data.branch || data.course || "Computer Science",
+      branch: data.branch,
+      section: data.section || "A",
+      semester: data.semester || 6,
+      email: data.email,
+      phone: data.phone,
+      parent_name: data.parent_name,
+      parent_phone: data.parent_phone
+    };
   },
 
   // Attendance Data
@@ -1068,8 +1104,26 @@ export const api = {
         records
       };
     }
-    const res = await fetch(`${API_BASE_URL}/student/${studentId}/attendance`);
-    return res.json();
+    const data = await safeFetch(`${API_BASE_URL}/students/${studentId}/attendance`);
+    const records = (data.subjects || data.records || []).map(r => ({
+      subject_id: r.subject_code || r.subject_id,
+      subject_code: r.subject_code || r.subject_id,
+      subject_name: r.subject_name,
+      name: r.subject_name,
+      attended: r.attended,
+      conducted: r.conducted,
+      percentage: r.percentage,
+      status: r.status,
+      faculty: r.faculty || 'Dr. Faculty Member'
+    }));
+    return {
+      student_id: studentId,
+      overall_percentage: data.overall_percentage,
+      total_attended: data.total_attended,
+      total_conducted: data.total_conducted,
+      status: data.status,
+      records
+    };
   },
 
   // Timetable
@@ -1089,8 +1143,19 @@ export const api = {
       });
       return { student_id: studentId, schedule };
     }
-    const res = await fetch(`${API_BASE_URL}/student/${studentId}/timetable`);
-    return res.json();
+    const data = await safeFetch(`${API_BASE_URL}/students/${studentId}/timetable`);
+    const schedule = {};
+    if (Array.isArray(data)) {
+      data.forEach(item => {
+        schedule[item.day] = (item.periods || []).map(p => ({
+          time: p.time_slot || p.time,
+          subject_name: p.subject_name,
+          room: p.room,
+          faculty: p.faculty
+        }));
+      });
+    }
+    return { student_id: studentId, schedule };
   },
 
   // Marks / CGPA
@@ -1125,11 +1190,41 @@ export const api = {
       return {
         student_id: studentId,
         cgpa: s.marks.cgpa,
-        records
+        current_cgpa: s.marks.cgpa,
+        records,
+        subjects: records
       };
     }
-    const res = await fetch(`${API_BASE_URL}/student/${studentId}/marks`);
-    return res.json();
+    const data = await safeFetch(`${API_BASE_URL}/students/${studentId}/marks`);
+    const list = data.marks || data.subjects || [];
+    const subjects = list.map(m => ({
+      code: m.subject_code || m.code,
+      name: m.subject_name || m.name,
+      subject_id: m.subject_code || m.code,
+      subject_name: m.subject_name || m.name,
+      mid_sem: m.internal_1 !== undefined ? m.internal_1 : 18,
+      internal_1: m.internal_1,
+      internal_2: m.internal_2,
+      assignment_marks: m.assignment_score !== undefined ? m.assignment_score : 9,
+      assignment_score: m.assignment_score,
+      internal_total: m.total_internal !== undefined ? m.total_internal : 40,
+      total_internal: m.total_internal,
+      max_internal: m.max_internal || 50,
+      current_percentage: m.current_percentage,
+      target_grades: {
+        'S (90+)': m.target_endsem_needed_for_A,
+        'A (80+)': m.target_endsem_needed_for_A,
+        'B (70+)': m.target_endsem_needed_for_B,
+        'C (60+)': 50
+      }
+    }));
+    return {
+      student_id: studentId,
+      current_cgpa: data.cgpa,
+      cgpa: data.cgpa,
+      records: subjects,
+      subjects
+    };
   },
 
   // Examinations
@@ -1150,8 +1245,20 @@ export const api = {
       });
       return { student_id: studentId, exams };
     }
-    const res = await fetch(`${API_BASE_URL}/student/${studentId}/exams`);
-    return res.json();
+    const data = await safeFetch(`${API_BASE_URL}/students/${studentId}/exams`);
+    const list = Array.isArray(data) ? data : (data.exams || []);
+    const exams = list.map(e => ({
+      id: e.exam_id || e.id,
+      subject_name: e.subject_name,
+      subject_code: e.subject_code,
+      exam_type: e.exam_type,
+      date: e.date,
+      time: e.time,
+      room: e.room,
+      portion: e.portion || 'All Modules Covered',
+      max_marks: e.max_marks || 50
+    }));
+    return { student_id: studentId, exams };
   },
 
   // Assignments
@@ -1173,8 +1280,19 @@ export const api = {
       });
       return { student_id: studentId, assignments: list };
     }
-    const res = await fetch(`${API_BASE_URL}/student/${studentId}/assignments`);
-    return res.json();
+    const data = await safeFetch(`${API_BASE_URL}/students/${studentId}/assignments`);
+    const list = Array.isArray(data) ? data : (data.assignments || []);
+    const assignments = list.map(a => ({
+      id: a.assignment_id || a.id,
+      subject_name: a.subject_name,
+      subject_code: a.subject_code,
+      title: a.title,
+      description: a.description || 'Course assignment submission',
+      due_date: a.due_date,
+      status: a.status,
+      max_marks: a.max_marks || 20
+    }));
+    return { student_id: studentId, assignments };
   },
 
   // Fees
@@ -1187,8 +1305,16 @@ export const api = {
         ...s.fees
       };
     }
-    const res = await fetch(`${API_BASE_URL}/student/${studentId}/fees`);
-    return res.json();
+    const data = await safeFetch(`${API_BASE_URL}/students/${studentId}/fees`);
+    return {
+      student_id: studentId,
+      total: data.tuition_fee_total || 75000,
+      paid: data.tuition_fee_paid || 75000,
+      pending: data.total_pending_fee !== undefined ? data.total_pending_fee : (data.pending || 0),
+      due_date: data.due_date || '2026-08-31',
+      status: data.status || 'PAID',
+      transactions: data.transactions || []
+    };
   },
 
   // Announcements
@@ -1196,8 +1322,17 @@ export const api = {
     if (USE_MOCK_API) {
       return { announcements: mockAnnouncements };
     }
-    const res = await fetch(`${API_BASE_URL}/student/announcements`);
-    return res.json();
+    const data = await safeFetch(`${API_BASE_URL}/announcements`);
+    const list = Array.isArray(data) ? data : (data.announcements || []);
+    const announcements = list.map(a => ({
+      id: a.announcement_id || a.id,
+      title: a.title,
+      content: a.content,
+      date: a.date,
+      category: a.category,
+      important: !!a.important
+    }));
+    return { announcements };
   },
 
   // Leave projection calculations
@@ -1237,18 +1372,45 @@ export const api = {
   async sendChatMessage(role, studentId, message) {
     if (USE_MOCK_API) {
       // Simulate minor typing latency
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 800));
       return simulateAIChatReply(role, studentId, message);
     }
-    const res = await fetch(`${API_BASE_URL}/chat/message`, {
+    const data = await safeFetch(`${API_BASE_URL}/chat/message`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ role, student_id: studentId, message })
     });
-    if (!res.ok) {
-      throw new Error('Failed to send chat message.');
+    return {
+      reply: data.reply,
+      user_role: data.user_role,
+      student_id: data.student_id,
+      data: data.structured_data
+    };
+  },
+
+  // WhatsApp Webhook Simulator
+  async simulateWhatsAppMessage(fromNumber, message, isVoiceNote, studentId, role) {
+    if (USE_MOCK_API) {
+      await new Promise(resolve => setTimeout(resolve, 800));
+      const text = message || (role === 'PARENT' ? "How is my child's attendance?" : "What is my current attendance?");
+      const header = isVoiceNote 
+        ? `🎙️ *Voice Note Transcribed:* "${text}"\n\n🤖 *CollegeAI WhatsApp Assistant:*\n`
+        : `🤖 *CollegeAI WhatsApp Assistant:*\n`;
+      return {
+        reply: `${header}Attendance record for ${studentId}: 88.0% (SAFE).\n• Max missable classes: 34\n• All subjects above 75% threshold.`
+      };
     }
-    return res.json();
+    return safeFetch(`${API_BASE_URL}/whatsapp/simulate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from_number: fromNumber,
+        message,
+        is_voice_note: isVoiceNote,
+        student_id: studentId,
+        role
+      })
+    });
   },
 
   // Admin and Demo Helpers

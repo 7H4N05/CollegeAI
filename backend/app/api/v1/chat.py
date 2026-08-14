@@ -6,6 +6,8 @@ from app.ai.agent import ai_agent
 router = APIRouter(prefix="/chat", tags=["AI Conversational Agent"])
 
 @router.post("", response_model=ChatResponse)
+@router.post("/", response_model=ChatResponse)
+@router.post("/message", response_model=ChatResponse)
 async def chat_with_college_ai(
     payload: ChatRequest,
     user: dict = Depends(get_current_user_from_header)
